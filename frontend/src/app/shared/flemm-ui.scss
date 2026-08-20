@@ -1,0 +1,220 @@
+// Shared Flemm-style UI (app + marketing)
+
+@mixin romance-gradient-text {
+  background: var(--gradient-script);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@mixin romance-gradient-bg {
+  background: var(--gradient-romance);
+}
+
+.page-title {
+  font-size: clamp(1.75rem, 4vw, 2.35rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--flemm-midnight);
+  margin: 0 0 8px;
+  line-height: 1.35;
+  overflow: visible;
+}
+
+.page-lead {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-body);
+  margin: 0 0 28px;
+  line-height: 1.6;
+  max-width: 72ch;
+}
+
+.script-accent {
+  font-family: var(--font-script);
+  font-weight: 400;
+  // Caveat + background-clip corta descenders/itálico sem caixa extra
+  display: inline-block;
+  padding: 0.15em 0.22em 0.1em 0.08em;
+  margin: -0.1em -0.08em -0.05em 0;
+  line-height: 1.2;
+  vertical-align: baseline;
+  overflow: visible;
+  @include romance-gradient-text;
+}
+
+.btn-romance {
+  @include romance-gradient-bg;
+  color: #fff !important;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--shadow-romance);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  font-family: inherit;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 44px rgba(91, 45, 94, 0.32);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.flemm-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.flemm-stat-card {
+  background: #fff;
+  border: 1px solid var(--border-strong);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 32px rgba(35, 28, 43, 0.07);
+}
+
+.flemm-stat-label {
+  display: block;
+  padding: 10px 16px 8px;
+  background: linear-gradient(180deg, var(--flemm-lilac-card) 0%, #f0e4f4 100%);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--flemm-plum);
+}
+
+.flemm-stat-value {
+  display: block;
+  padding: 14px 16px 18px;
+  font-size: clamp(1.6rem, 3vw, 2.15rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--flemm-midnight);
+  line-height: 1;
+}
+
+.flemm-card {
+  background: #fff;
+  border: 1px solid var(--border-strong);
+  border-radius: 20px;
+  box-shadow: 0 10px 32px rgba(35, 28, 43, 0.06);
+}
+
+.flemm-table-wrap {
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid var(--border-strong);
+  border-radius: 20px;
+  box-shadow: 0 10px 32px rgba(35, 28, 43, 0.06);
+}
+
+.flemm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--flemm-plum);
+    padding: 12px 14px;
+    background: linear-gradient(180deg, var(--flemm-lilac-card) 0%, #f0e4f4 100%);
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--flemm-midnight);
+    font-weight: 500;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover td {
+    background: rgba(230, 210, 236, 0.25);
+  }
+
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.flemm-empty {
+  text-align: center;
+  padding: 40px 28px;
+  background: #fff;
+  border: 1px dashed var(--border-strong);
+  border-radius: 20px;
+  overflow: hidden;
+
+  p {
+    margin: 0 0 16px;
+    color: var(--text-body);
+    font-weight: 500;
+    line-height: 1.55;
+  }
+}
+
+.flemm-empty--photo {
+  position: relative;
+  padding: 0;
+  border-style: solid;
+  min-height: 220px;
+  display: flex;
+  align-items: flex-end;
+
+  .flemm-empty-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+    opacity: 0.92;
+  }
+
+  .flemm-empty-body {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 28px 24px 32px;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 252, 248, 0) 0%,
+      rgba(255, 252, 248, 0.88) 45%,
+      rgba(255, 252, 248, 0.98) 100%
+    );
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

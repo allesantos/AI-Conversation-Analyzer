@@ -1,0 +1,180 @@
+<div class="landing marketing-page marketing-page--light">
+  <header class="landing-header">
+    <a routerLink="/" class="marketing-brand">
+      <img
+        src="/assets/images/analyzer-logo.png"
+        alt="Analyzer"
+        class="brand-logo brand-logo--header"
+        width="1827"
+        height="401"
+      />
+    </a>
+    <nav class="marketing-nav-links landing-nav-auth">
+      @if (auth.isAuthenticated()) {
+        <a routerLink="/dashboard" class="btn-romance landing-nav-cta">Minhas conversas</a>
+      } @else {
+        <a routerLink="/login" class="landing-nav-signin">Entrar</a>
+        <a routerLink="/register" class="btn-romance landing-nav-cta">Criar conta</a>
+      }
+    </nav>
+  </header>
+
+  <section class="landing-hero">
+    <div class="landing-hero-grid">
+      <div class="landing-hero-main">
+        <p class="landing-kicker">WhatsApp · IA · Privacidade</p>
+        <h1 class="landing-title landing-display-title">
+          Leia entre as linhas das suas
+          <span class="script-accent">conversas</span>
+        </h1>
+        <p class="landing-body landing-lead">
+          Evidências, reciprocidade e sinais de interesse — sempre separando
+          <strong>observação</strong> de <strong>inferência</strong>.
+        </p>
+
+        <div
+          class="drop-zone landing-drop"
+          [class.is-dragover]="dragOver()"
+          [class.has-file]="selectedFile()"
+          (drop)="onDrop($event)"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave()"
+        >
+          <input
+            id="landing-file"
+            type="file"
+            accept=".txt,text/plain,.zip,application/zip"
+            hidden
+            (change)="onFileChange($event)"
+          />
+          <label for="landing-file" class="drop-zone-label">
+            @if (selectedFile(); as file) {
+              <strong>{{ file.name }}</strong>
+              <span>Clique para trocar o arquivo</span>
+            } @else {
+              <strong>Arraste e solte seu .txt ou .zip aqui</strong>
+              <span>ou clique para escolher o export do WhatsApp</span>
+            }
+          </label>
+        </div>
+
+        <label class="consent-row landing-consent">
+          <input
+            type="checkbox"
+            [checked]="consent()"
+            (change)="consent.set($any($event.target).checked)"
+          />
+          <span>Tenho consentimento para analisar esta conversa (uso pessoal)</span>
+        </label>
+
+        <div class="landing-cta-row">
+          <button
+            type="button"
+            class="btn-romance landing-submit"
+            [disabled]="!consent()"
+            (click)="startAnalysis()"
+          >
+            Analisar minha conversa
+          </button>
+        </div>
+      </div>
+
+      <aside class="landing-visual landing-visual--hero" aria-label="Prévia do app">
+        <div class="mockup-slot mockup-slot--hero">
+          <app-photo
+            name="landing-mockup-hero"
+            alt="Mockup do Analyzer com celulares e cards de interesse, reciprocidade e evidências"
+            [contain]="true"
+            [priority]="true"
+            extraClass="landing-mockup landing-mockup--hero"
+          />
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="landing-insights">
+    <div class="landing-story">
+      <div class="landing-story-copy">
+        <p class="landing-kicker">Análise do chat</p>
+        <h2 class="landing-section-title">Decifre sua <span class="script-accent">história</span></h2>
+        <p class="landing-body">
+          Veja mensagens, score de interesse e reciprocidade no mesmo lugar — com botões
+          de <strong>observação</strong> e <strong>inferência</strong> separados.
+        </p>
+      </div>
+      <div class="landing-story-visual">
+        <div class="mockup-slot mockup-slot--chat">
+          <app-photo
+            name="landing-mockup-chat"
+            alt="Mockup de análise de chat com score de interesse e reciprocidade"
+            [contain]="true"
+            extraClass="landing-mockup landing-mockup--chat"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-grid">
+      <article>
+        <span class="insight-icon">◆</span>
+        <h3>Sinais de interesse</h3>
+        <p>Positivos, neutros e negativos com nível de confiança e evidências clicáveis.</p>
+      </article>
+      <article>
+        <span class="insight-icon">◆</span>
+        <h3>Reciprocidade</h3>
+        <p>Quem inicia, tempo de resposta, proporção de mensagens e evolução no tempo.</p>
+      </article>
+      <article>
+        <span class="insight-icon">◆</span>
+        <h3>Áudio transcrito</h3>
+        <p>Whisper integrado — áudios entram na análise como texto, no contexto certo.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="landing-steps">
+    <h2 class="landing-section-title landing-section-title--center">Como funciona</h2>
+    <div class="steps-grid">
+      <article>
+        <span class="step-num">1</span>
+        <h3>Exporte o chat</h3>
+        <p>Arquivo .txt do WhatsApp — ou .zip quando o app permitir incluir mídia.</p>
+      </article>
+      <article>
+        <span class="step-num">2</span>
+        <h3>Importe e transcreva</h3>
+        <p>Pareamos áudios com &lt;Mídia oculta&gt; e analisamos o conteúdo transcrito.</p>
+      </article>
+      <article>
+        <span class="step-num">3</span>
+        <h3>Veja o panorama</h3>
+        <p>Nível de interesse, confiança, evidências clicáveis e evolução no tempo.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="landing-trust">
+    <div class="landing-trust-grid">
+      <div class="landing-trust-copy">
+        <h2 class="landing-section-title">Com grande poder vem grande confidencialidade</h2>
+        <ul>
+          <li>Seus dados ficam na sua conta — delete quando quiser</li>
+          <li>Logs sem conteúdo privado das mensagens</li>
+          <li>Análise baseada em evidências, não em certezas absolutas</li>
+        </ul>
+      </div>
+      <div class="landing-trust-visual">
+        <div class="mockup-slot mockup-slot--card">
+          <app-photo
+            name="landing-mockup-card"
+            alt="Card de análise de conversa com score de interesse"
+            [contain]="true"
+            extraClass="landing-mockup landing-mockup--card"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

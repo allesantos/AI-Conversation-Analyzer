@@ -1,0 +1,24 @@
+<nav class="shell-nav">
+  <div class="shell-nav-inner">
+    <a routerLink="/dashboard" class="brand">
+      <img
+        src="/assets/images/analyzer-logo.png"
+        alt="Analyzer"
+        class="brand-logo brand-logo--shell"
+        width="1827"
+        height="401"
+      />
+    </a>
+    <div class="nav-links">
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+      <a routerLink="/conversations" routerLinkActive="active">Conversas</a>
+      <a routerLink="/usage" routerLinkActive="active">Uso</a>
+    </div>
+    <span class="spacer"></span>
+    <span class="user-email">{{ auth.user()?.email }}</span>
+    <button class="logout-btn" type="button" (click)="auth.logout()">Sair</button>
+  </div>
+</nav>
+<main class="shell-content">
+  <router-outlet />
+</main>

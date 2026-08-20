@@ -1,0 +1,89 @@
+<div class="import-page marketing-page marketing-page--light">
+  <section class="marketing-split">
+    <aside class="marketing-visual-panel" aria-hidden="true">
+      <app-photo name="import-chat" alt="" [cover]="true" />
+      <div class="photo-overlay">
+        <a routerLink="/" class="photo-brand-chip">
+          <img
+            src="/assets/images/analyzer-logo.png"
+            alt="Analyzer"
+            class="brand-logo brand-logo--chip"
+            width="1827"
+            height="401"
+          />
+        </a>
+        <div class="photo-copy">
+          <p class="photo-kicker">Importação segura</p>
+          <h1 class="photo-title">
+            Decifre sua
+            <span class="photo-script">conversa</span>
+          </h1>
+          <p class="photo-lead">.txt ou .zip do WhatsApp — áudios entram após o cadastro.</p>
+        </div>
+      </div>
+    </aside>
+
+    <div class="marketing-content-panel">
+      <nav class="marketing-nav-inline">
+        <span class="marketing-kicker marketing-kicker--dark">Passo 1 · Upload</span>
+        <div class="marketing-nav-links">
+          <a routerLink="/demo" class="btn-ghost-dark">Ver demo</a>
+        </div>
+      </nav>
+
+      <div class="marketing-panel-inner import-panel-inner">
+        <p class="marketing-lead">
+          Envie o export. Se ainda não tem conta, criamos uma e você continua de onde parou.
+        </p>
+
+        <div
+          class="drop-zone"
+          [class.is-dragover]="dragOver()"
+          [class.has-file]="selectedFile()"
+          (drop)="onDrop($event)"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave()"
+        >
+          <input
+            id="import-page-file"
+            type="file"
+            accept=".txt,text/plain,.zip,application/zip"
+            hidden
+            (change)="onFileChange($event)"
+          />
+          <label for="import-page-file" class="drop-zone-label">
+            @if (selectedFile(); as file) {
+              <strong>{{ file.name }}</strong>
+              <span>Clique para trocar o arquivo</span>
+            } @else {
+              <strong>Arraste e solte seu arquivo aqui</strong>
+              <span>ou clique para escolher .txt / .zip</span>
+            }
+          </label>
+        </div>
+
+        <label class="consent-row">
+          <input
+            type="checkbox"
+            [checked]="consent()"
+            (change)="consent.set($any($event.target).checked)"
+          />
+          <span>Tenho consentimento para analisar esta conversa (uso pessoal)</span>
+        </label>
+
+        <button
+          type="button"
+          class="btn-romance import-submit"
+          [disabled]="!consent()"
+          (click)="startAnalysis()"
+        >
+          Analisar minha conversa
+        </button>
+
+        <p class="marketing-note">
+          Já tem conta? <a routerLink="/login">Entrar</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</div>

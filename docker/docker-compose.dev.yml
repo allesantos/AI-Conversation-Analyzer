@@ -1,0 +1,4 @@
+# Desenvolvimento local — apenas PostgreSQL e Redis (ADR-015).
+# Uso: docker compose -f docker/docker-compose.dev.yml up -d
+include:
+  - path: docker-compose.yml

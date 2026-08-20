@@ -1,0 +1,1 @@
+"""Schemas Pydantic v2."""

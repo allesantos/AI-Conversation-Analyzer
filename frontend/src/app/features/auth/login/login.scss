@@ -1,0 +1,155 @@
+@use '../../../shared/flemm-ui.scss' as *;
+@use '../../marketing/marketing-shared.scss';
+
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+.auth-page {
+  height: 100dvh;
+  max-height: 100dvh;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.auth-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.auth-visual-panel {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.auth-form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 0;
+  padding: clamp(20px, 3.5vw, 40px) clamp(24px, 4vw, 56px);
+  background: linear-gradient(180deg, #fff 0%, var(--flemm-paper) 100%);
+  border-left: 1px solid var(--border-subtle);
+  overflow-y: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.auth-form-inner {
+  width: 100%;
+  max-width: 400px;
+  min-width: 0;
+}
+
+.auth-form-header {
+  margin-bottom: 20px;
+}
+
+.auth-form-header h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.45rem, 2.2vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--flemm-midnight);
+  line-height: 1.15;
+}
+
+.auth-subtitle {
+  margin: 0;
+  color: var(--text-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-field {
+  width: 100%;
+  max-width: 100%;
+  font-size: 15px;
+}
+
+.auth-submit {
+  width: 100%;
+  margin-top: 6px;
+  padding: 14px 24px;
+  font-size: 15px;
+  border: none;
+}
+
+.error {
+  color: var(--error);
+  font-size: 13px;
+  margin: 0 0 4px;
+  font-weight: 500;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 14px;
+  color: var(--text-body);
+
+  a {
+    color: var(--flemm-plum);
+    text-decoration: none;
+    font-weight: 700;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  :host,
+  .auth-page {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .auth-split {
+    height: auto;
+    overflow: visible;
+    grid-template-columns: 1fr;
+  }
+
+  .auth-visual-panel {
+    height: auto;
+    min-height: min(40vh, 320px);
+  }
+
+  .auth-form-panel {
+    height: auto;
+    border-left: none;
+    padding: 28px 24px 40px;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-visual-panel {
+    min-height: 260px;
+  }
+}

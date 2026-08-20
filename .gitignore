@@ -1,0 +1,31 @@
+# Secrets
+.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+backend/.venv/
+backend/.ruff_cache/
+backend/.pytest_cache/
+
+# Node / Angular
+node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+
+# Áudio (Fase 6 — não versionar arquivos enviados)
+storage/audio/
+backend/storage/audio/
+.idea/
+.vscode/
+.cursor/
+*.log
+Thumbs.db
+.DS_Store

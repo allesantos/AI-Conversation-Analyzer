@@ -1,0 +1,7 @@
+[18/08/26, 08:00:00] As mensagens e as ligações são protegidas com a criptografia de ponta a ponta. Somente as pessoas que fazem parte dessa conversa podem ler, ouvir e compartilhar o conteúdo.
+[18/08/26, 09:15:03] Marina Costa: Oi Pedro, tudo bem?
+[18/08/26, 09:16:10] Pedro Almeida: Oi Marina! Segue o endereço:
+Rua das Palmeiras, 120
+Apto 45
+[18/08/2026, 09:17:00] Marina Costa: foto_praia.jpg (arquivo anexado)
+[18/08/2026, 09:18:22] Pedro Almeida: Recebi, obrigado!

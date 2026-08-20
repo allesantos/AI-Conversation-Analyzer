@@ -1,0 +1,110 @@
+// Usa largura total do shell (1280px)
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.usage-rate-note {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.error-banner {
+  background: var(--signal-negative-dim);
+  color: #8b3a3a;
+  border: 1px solid rgba(194, 106, 106, 0.35);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.flemm-stat-value--dual {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+  line-height: 1.15;
+}
+
+.flemm-stat-sub {
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--flemm-plum);
+  letter-spacing: -0.02em;
+}
+
+.usage-day-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.usage-day-tab {
+  appearance: none;
+  border: 1px solid var(--border-medium);
+  background: #fff;
+  color: var(--text-body);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: rgba(91, 45, 94, 0.35);
+    color: var(--flemm-plum);
+  }
+
+  &.is-active {
+    background: var(--flemm-lilac-card);
+    border-color: rgba(91, 45, 94, 0.28);
+    color: var(--flemm-plum);
+    box-shadow: 0 4px 14px rgba(91, 45, 94, 0.12);
+  }
+}
+
+.usage-day-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.usage-day-meta-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-label);
+}
+
+.usage-day-meta-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--flemm-midnight);
+}
+
+.usage-day-meta-count {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.cost-cell {
+  white-space: nowrap;
+  font-size: 12px;
+}

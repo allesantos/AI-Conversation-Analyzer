@@ -1,0 +1,28 @@
+@use '../marketing-shared.scss' as *;
+@use '../marketing-split.scss';
+
+.import-page {
+  background: transparent;
+  color: var(--flemm-midnight);
+}
+
+.import-panel-inner {
+  max-width: 480px;
+}
+
+.import-trust {
+  margin-bottom: 16px;
+}
+
+.import-submit {
+  width: 100%;
+  padding: 16px 28px;
+  font-size: 16px;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}

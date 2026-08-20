@@ -1,0 +1,349 @@
+@mixin romance-gradient-text {
+  background: var(--gradient-script);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@mixin romance-gradient-bg {
+  background: var(--gradient-romance);
+}
+
+@mixin photo-overlay-cinematic {
+  background:
+    linear-gradient(
+      to top,
+      rgba(24, 16, 32, 0.78) 0%,
+      rgba(24, 16, 32, 0.42) 38%,
+      rgba(24, 16, 32, 0.1) 58%,
+      transparent 78%
+    ),
+    linear-gradient(
+      to right,
+      rgba(24, 16, 32, 0.55) 0%,
+      rgba(24, 16, 32, 0.22) 42%,
+      transparent 68%
+    );
+}
+
+@mixin overlay-text-shadow {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.42);
+}
+
+@mixin photo-brand-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--flemm-midnight);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  width: fit-content;
+  padding: 8px 14px 8px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(91, 45, 94, 0.1);
+  box-shadow: 0 4px 18px rgba(35, 28, 43, 0.08);
+}
+
+.marketing-page {
+  min-height: 100vh;
+  color: var(--flemm-midnight);
+}
+
+.marketing-page--light {
+  color: var(--flemm-midnight);
+
+  .marketing-brand {
+    color: var(--flemm-midnight);
+  }
+}
+
+.marketing-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.marketing-brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-logo {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+
+  &--header {
+    height: clamp(28px, 4vw, 36px);
+  }
+
+  &--chip {
+    height: 26px;
+  }
+
+  &--shell {
+    height: 28px;
+  }
+}
+
+.marketing-brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  flex-shrink: 0;
+
+  &:not(img) {
+    @include romance-gradient-bg;
+    box-shadow: 0 4px 16px rgba(212, 160, 74, 0.25);
+  }
+}
+
+.marketing-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  a,
+  button {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+  }
+}
+
+.btn-ghost-light {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.btn-ghost-dark {
+  border: 1px solid rgba(91, 45, 94, 0.18);
+  color: var(--flemm-midnight);
+}
+
+.btn-romance {
+  @include romance-gradient-bg;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: var(--shadow-romance);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 44px rgba(91, 45, 94, 0.42);
+  }
+}
+
+.script-accent {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: 1.15em;
+  display: inline-block;
+  padding: 0.15em 0.22em 0.1em 0.08em;
+  margin: -0.1em -0.08em -0.05em 0;
+  line-height: 1.2;
+  overflow: visible;
+  @include romance-gradient-text;
+}
+
+// Texto sobre foto — centro-esquerda, tipografia maior
+.photo-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: clamp(20px, 3vw, 36px) clamp(28px, 5vw, 56px);
+  @include photo-overlay-cinematic;
+  color: #fff;
+  pointer-events: none;
+  overflow: hidden;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.photo-brand-chip {
+  @include photo-brand-chip;
+  position: absolute;
+  top: clamp(20px, 3vw, 36px);
+  left: clamp(28px, 5vw, 56px);
+  z-index: 2;
+  padding: 8px 12px;
+}
+
+.photo-copy {
+  position: absolute;
+  left: clamp(28px, 5vw, 56px);
+  top: 50%;
+  transform: translateY(-44%);
+  max-width: min(520px, 88%);
+}
+
+.photo-kicker {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  @include overlay-text-shadow;
+}
+
+.photo-title {
+  margin: 0 0 12px;
+  font-family: var(--font-body);
+  font-size: clamp(1.75rem, 3.2vw, 2.45rem);
+  line-height: 1.12;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #fff;
+  @include overlay-text-shadow;
+}
+
+.photo-script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.8vw, 2.85rem);
+  line-height: 1.05;
+  color: #fdebd0;
+  @include overlay-text-shadow;
+}
+
+.photo-lead {
+  margin: 0 0 14px;
+  font-size: clamp(15px, 1.5vw, 17px);
+  line-height: 1.55;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.92);
+  max-width: 42ch;
+  @include overlay-text-shadow;
+
+  strong {
+    color: #fdebd0;
+    font-weight: 600;
+  }
+}
+
+.photo-trust {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+
+  li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.45;
+    @include overlay-text-shadow;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--flemm-brass);
+    }
+  }
+}
+
+.consent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-align: left;
+  font-size: 14px;
+  color: rgba(35, 28, 43, 0.68);
+  margin-bottom: 20px;
+  line-height: 1.5;
+
+  input {
+    margin-top: 3px;
+    accent-color: var(--flemm-plum);
+  }
+}
+
+.drop-zone {
+  border: 2px dashed rgba(91, 45, 94, 0.28);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: clamp(32px, 5vw, 44px) 24px;
+  margin-bottom: 20px;
+  transition: border-color 0.15s, background 0.15s;
+
+  &.is-dragover,
+  &.has-file {
+    border-color: var(--flemm-plum-light);
+    background: rgba(230, 210, 236, 0.35);
+  }
+}
+
+.drop-zone-label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  text-align: center;
+
+  strong {
+    font-size: clamp(16px, 1.8vw, 18px);
+    font-weight: 700;
+    color: var(--flemm-midnight);
+  }
+
+  span {
+    font-size: 14px;
+    color: rgba(35, 28, 43, 0.55);
+  }
+}
+
+@media (max-width: 960px) {
+  .photo-overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .photo-brand-chip {
+    position: static;
+  }
+
+  .photo-copy {
+    position: static;
+    transform: none;
+    max-width: 100%;
+    margin-top: auto;
+  }
+}

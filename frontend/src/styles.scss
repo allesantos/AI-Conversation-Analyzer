@@ -1,0 +1,264 @@
+@use '@angular/material' as mat;
+@use './app/shared/flemm-ui.scss';
+
+// ---------------------------------------------------------------------------
+// Material 3 — light theme (Flemm paper aesthetic)
+// ---------------------------------------------------------------------------
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$violet-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: 'Manrope',
+    density: 0,
+  ));
+
+  --mat-sys-primary: #8b4a6b;
+  --mat-sys-on-primary: #fff;
+  --mat-sys-primary-container: #e6d2ec;
+  --mat-sys-on-primary-container: #5b2d5e;
+  --mat-sys-secondary: #b8a99a;
+  --mat-sys-on-secondary: #231c2b;
+  --mat-sys-secondary-container: #f5f0eb;
+  --mat-sys-on-secondary-container: #5b2d5e;
+  --mat-sys-tertiary: #d4a04a;
+  --mat-sys-on-tertiary: #fff;
+  --mat-sys-tertiary-container: #f5e0b8;
+  --mat-sys-on-tertiary-container: #5c4520;
+  --mat-sys-error: #c26a6a;
+  --mat-sys-on-error: #fff;
+  --mat-sys-error-container: #fce8e8;
+  --mat-sys-on-error-container: #7f1d1d;
+  --mat-sys-surface: #fffcf8;
+  --mat-sys-on-surface: #231c2b;
+  --mat-sys-surface-variant: #fffdf9;
+  --mat-sys-on-surface-variant: #4a3c50;
+  --mat-sys-surface-container-lowest: #fff;
+  --mat-sys-surface-container-low: #fffcf8;
+  --mat-sys-surface-container: #fffdf9;
+  --mat-sys-surface-container-high: #efe8e0;
+  --mat-sys-surface-container-highest: #e8dfd6;
+  --mat-sys-outline: rgba(91, 45, 94, 0.18);
+  --mat-sys-outline-variant: rgba(184, 169, 154, 0.45);
+  --mat-sys-inverse-surface: #231c2b;
+  --mat-sys-inverse-on-surface: #faf7f5;
+  --mat-sys-inverse-primary: #e8b4ba;
+}
+
+// ---------------------------------------------------------------------------
+// Design tokens — Flemm palette (flemm.co)
+// ---------------------------------------------------------------------------
+
+:root {
+  --flemm-midnight-deep: #0c0a10;
+  --flemm-midnight: #231c2b;
+  --flemm-plum: #5b2d5e;
+  --flemm-plum-light: #8b4a6b;
+  --flemm-rose: #c26a6a;
+  --flemm-rose-light: #e8b4ba;
+  --flemm-brass: #d4a04a;
+  --flemm-brass-dark: #8b6a2a;
+  --flemm-paper: #fffcf8;
+  --flemm-paper-soft: #fffbf7;
+  --flemm-paper-muted: #fdf8f3;
+  --flemm-peach: #f7ece4;
+  --flemm-stone: #b8a99a;
+  --flemm-lilac-card: #e6d2ec;
+
+  --romance-dark: var(--flemm-midnight-deep);
+  --romance-cream: var(--flemm-paper);
+  --romance-ink: var(--flemm-midnight);
+  --romance-purple: var(--flemm-plum);
+  --romance-lilac: var(--flemm-plum-light);
+  --romance-coral: var(--flemm-brass);
+  --romance-blush: rgba(194, 106, 106, 0.14);
+
+  --bg-base: var(--flemm-paper);
+  --bg-surface: #fff;
+  --bg-surface-hover: var(--flemm-paper-soft);
+  --bg-surface-raised: #fff;
+  --paper-evidence: var(--flemm-paper-soft);
+  --paper-evidence-text: var(--flemm-midnight);
+
+  --signal-positive: var(--flemm-brass);
+  --signal-positive-dim: rgba(212, 160, 74, 0.16);
+  --signal-negative: var(--flemm-rose);
+  --signal-negative-dim: rgba(194, 106, 106, 0.12);
+  --signal-neutral: var(--flemm-stone);
+  --signal-neutral-dim: rgba(184, 169, 154, 0.22);
+
+  --accent-primary: var(--flemm-plum-light);
+  --accent-primary-hover: #a0587f;
+  --accent-primary-dim: rgba(139, 74, 107, 0.14);
+
+  --text-primary: #1a1520;
+  --text-body: #4a3c50;
+  --text-secondary: #4a3c50;
+  --text-muted: #6b5f66;
+  --text-label: #5b2d5e;
+  --border-subtle: rgba(91, 45, 94, 0.12);
+  --border-medium: rgba(91, 45, 94, 0.22);
+  --border-strong: rgba(91, 45, 94, 0.28);
+  --error: #c26a6a;
+
+  --font-display: 'Manrope', system-ui, sans-serif;
+  --font-script: 'Caveat', 'Segoe Script', cursive;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --gradient-romance: linear-gradient(90deg, var(--flemm-plum) 0%, var(--flemm-brass) 100%);
+  --gradient-script: linear-gradient(120deg, var(--flemm-rose-light) 0%, var(--flemm-brass) 100%);
+  --shadow-romance: 0 12px 40px rgba(91, 45, 94, 0.22);
+  // Flemm: quase branco quente, wash bem suave (sem paper-soft escuro no topo)
+  --page-background: linear-gradient(180deg, #fff 0%, var(--flemm-paper) 18%, var(--flemm-paper) 100%);
+  --page-background-glow: radial-gradient(ellipse 85% 55% at 100% 0%, rgba(255, 251, 247, 0.95), transparent 58%),
+    radial-gradient(ellipse 60% 45% at 0% 40%, rgba(255, 255, 255, 0.85), transparent 52%);
+}
+
+// ---------------------------------------------------------------------------
+// Globals
+// ---------------------------------------------------------------------------
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  background-color: var(--flemm-paper);
+}
+
+body {
+  background-color: var(--flemm-paper);
+  background-image: var(--page-background-glow), var(--page-background);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+// ---------------------------------------------------------------------------
+// Material surface overrides
+// ---------------------------------------------------------------------------
+
+.mat-mdc-card {
+  --mdc-elevated-card-container-color: var(--bg-surface);
+  --mdc-outlined-card-container-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px !important;
+  box-shadow: 0 8px 28px rgba(35, 28, 43, 0.04);
+}
+
+.mat-toolbar {
+  --mat-toolbar-container-background-color: var(--bg-surface);
+  --mat-toolbar-container-text-color: var(--text-primary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-outline-color: var(--border-medium);
+  --mdc-outlined-text-field-hover-outline-color: var(--accent-primary);
+  --mdc-outlined-text-field-focus-outline-color: var(--flemm-plum);
+  --mdc-outlined-text-field-label-text-color: var(--text-body);
+  --mdc-outlined-text-field-input-text-color: var(--text-primary);
+  --mdc-outlined-text-field-focus-label-text-color: var(--flemm-plum);
+  --mdc-filled-text-field-container-color: var(--bg-surface-hover);
+}
+
+.mat-mdc-unelevated-button.mat-primary:not(:disabled),
+.mat-mdc-raised-button.mat-primary:not(:disabled) {
+  background: var(--gradient-romance) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  box-shadow: var(--shadow-romance) !important;
+}
+
+.mat-mdc-chip {
+  --mdc-chip-elevated-container-color: var(--flemm-lilac-card);
+  --mdc-chip-label-text-color: var(--flemm-plum);
+}
+
+.mat-mdc-list-item {
+  --mdc-list-list-item-label-text-color: var(--text-primary);
+  --mdc-list-list-item-supporting-text-color: var(--text-secondary);
+}
+
+.mat-mdc-checkbox {
+  --mdc-checkbox-unselected-icon-color: var(--text-secondary);
+  --mdc-checkbox-selected-icon-color: var(--accent-primary);
+  --mdc-checkbox-selected-checkmark-color: #fff;
+  --mdc-checkbox-selected-hover-icon-color: var(--accent-primary-hover);
+}
+
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button {
+  border-radius: 999px !important;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(184, 169, 154, 0.55);
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.aca-toast-success {
+  --mdc-snackbar-container-color: #2f5d45;
+  --mdc-snackbar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #fff;
+}
+
+.aca-toast-error {
+  --mdc-snackbar-container-color: #8b3a3a;
+  --mdc-snackbar-supporting-text-color: #fff;
+  --mat-snack-bar-button-color: #fff;
+}
+
+/* Shell nav — reforço global (evita cache/encapsulamento antigo) */
+app-shell .shell-nav {
+  padding: 20px 24px !important;
+  min-height: 80px !important;
+  height: auto !important;
+  box-sizing: border-box !important;
+  align-items: center !important;
+}
+
+app-shell .shell-nav-inner {
+  align-items: center !important;
+  min-height: 40px;
+}
+
+app-shell .brand-logo--shell {
+  height: 32px !important;
+  width: auto !important;
+  display: block !important;
+}

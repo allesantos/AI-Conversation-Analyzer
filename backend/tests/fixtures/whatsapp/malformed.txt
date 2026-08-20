@@ -1,0 +1,5 @@
+isto não é um export válido no início
+18/08/2026 13:00 - Marina Costa: Primeira mensagem válida.
+32/13/2026 10:00 - Alguém: data impossível neste cabeçalho
+18/08/2026 25:61 - Nome: hora inválida
+18/08/2026 13:01 - Pedro Almeida: Segunda mensagem válida.

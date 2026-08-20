@@ -1,0 +1,100 @@
+<section class="usage-page">
+  <h1 class="page-title">Uso de <span class="script-accent">IA</span></h1>
+  <p class="page-lead">
+    Consumo acumulado de tokens, áudio e custo estimado.
+    <span class="usage-rate-note">Valores em R$ usam câmbio estimado (taxa fixa).</span>
+  </p>
+
+  @if (error()) {
+    <div class="error-banner">{{ error() }}</div>
+  }
+
+  @if (summary(); as s) {
+    <div class="flemm-stat-grid">
+      <div class="flemm-stat-card">
+        <span class="flemm-stat-label">Chamadas</span>
+        <span class="flemm-stat-value mono">{{ s.total_records }}</span>
+      </div>
+      <div class="flemm-stat-card">
+        <span class="flemm-stat-label">Tokens entrada</span>
+        <span class="flemm-stat-value mono">{{ s.total_input_tokens | number }}</span>
+      </div>
+      <div class="flemm-stat-card">
+        <span class="flemm-stat-label">Tokens saída</span>
+        <span class="flemm-stat-value mono">{{ s.total_output_tokens | number }}</span>
+      </div>
+      <div class="flemm-stat-card">
+        <span class="flemm-stat-label">Áudio</span>
+        <span class="flemm-stat-value mono">{{ s.total_audio_seconds | number:'1.0-0' }}s</span>
+      </div>
+      <div class="flemm-stat-card flemm-stat-card--cost">
+        <span class="flemm-stat-label">Custo estimado</span>
+        <span class="flemm-stat-value mono flemm-stat-value--dual">
+          <span>{{ formatCostUsd(s.total_estimated_cost) }}</span>
+          <span class="flemm-stat-sub">{{ formatCostBrl(s.total_estimated_cost) }}</span>
+        </span>
+      </div>
+    </div>
+
+    @if (dayGroups().length) {
+      <div class="usage-day-tabs" role="tablist" aria-label="Custos por dia">
+        @for (day of dayGroups(); track day.key) {
+          <button
+            type="button"
+            class="usage-day-tab"
+            role="tab"
+            [class.is-active]="activeDay()?.key === day.key"
+            [attr.aria-selected]="activeDay()?.key === day.key"
+            (click)="selectDay(day.key)"
+          >
+            {{ day.label }}
+          </button>
+        }
+      </div>
+
+      @if (activeDay(); as day) {
+        <div class="usage-day-meta">
+          <span class="usage-day-meta-label">Subtotal do dia</span>
+          <span class="usage-day-meta-value mono">{{ formatCostPair(day.totalCost) }}</span>
+          <span class="usage-day-meta-count">{{ day.records.length }} chamada(s)</span>
+        </div>
+
+        <div class="flemm-table-wrap">
+          <table class="flemm-table">
+            <thead>
+              <tr>
+                <th>Hora</th>
+                <th>Operação</th>
+                <th>Provider</th>
+                <th>Modelo</th>
+                <th class="num">Tokens in</th>
+                <th class="num">Tokens out</th>
+                <th class="num">Custo</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of day.records; track trackRecord($index, r)) {
+                <tr>
+                  <td class="mono">{{ r.created_at | date:'HH:mm' }}</td>
+                  <td>{{ operationLabel(r.operation) }}</td>
+                  <td>{{ r.provider }}</td>
+                  <td class="mono">{{ r.model }}</td>
+                  <td class="num mono">{{ r.input_tokens | number }}</td>
+                  <td class="num mono">{{ r.output_tokens | number }}</td>
+                  <td class="num mono cost-cell">{{ formatCostPair(r.estimated_cost) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    } @else {
+      <div class="flemm-empty">
+        <p>
+          Nenhum registro de uso ainda. Execute uma análise ou gere sugestões para ver o consumo
+          aqui.
+        </p>
+      </div>
+    }
+  }
+</section>

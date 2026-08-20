@@ -1,0 +1,117 @@
+<section class="dashboard">
+  <header class="dashboard-header">
+    <div>
+      <h1 class="page-title">Seu <span class="script-accent">dashboard</span></h1>
+      <p class="page-lead">
+        Olá, {{ auth.user()?.email }} — visão geral das conversas, reciprocidade e uso de IA.
+      </p>
+    </div>
+    <div class="dashboard-actions">
+      <a routerLink="/conversations" class="btn-romance">Conversas</a>
+      <a routerLink="/usage" class="btn-outline">Uso de IA</a>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="page-lead">Carregando…</p>
+  } @else if (summary(); as data) {
+    <div class="flemm-stat-grid">
+      <div class="flemm-stat-card">
+        <span class="flemm-stat-label">Conversas</span>
+        <span class="flemm-stat-value">{{ data.total_conversations }}</span>
+      </div>
+      <div class="flemm-stat-card">
+        <span class="flemm-stat-label">Analisadas</span>
+        <span class="flemm-stat-value">{{ data.analyzed_conversations }}</span>
+      </div>
+      <div class="flemm-stat-card">
+        <span class="flemm-stat-label">Custo IA (est.)</span>
+        <span class="flemm-stat-value flemm-stat-value--sm">{{
+          formatCostBrl(data.usage.total_estimated_cost)
+        }}</span>
+      </div>
+      <div class="flemm-stat-card">
+        <span class="flemm-stat-label">Tokens</span>
+        <span class="flemm-stat-value flemm-stat-value--sm"
+          >{{ data.usage.total_input_tokens + data.usage.total_output_tokens | number: '1.0-0' }}</span
+        >
+      </div>
+    </div>
+
+    @if (data.total_conversations === 0) {
+      <div class="flemm-empty flemm-empty--photo">
+        <app-photo name="empty-mood" alt="" extraClass="flemm-empty-photo" />
+        <div class="flemm-empty-body">
+          <p>Nenhuma conversa ainda. Importe seu export do WhatsApp para começar.</p>
+          <a routerLink="/conversations" class="btn-romance">Importar primeira conversa</a>
+        </div>
+      </div>
+    } @else {
+      <div class="dashboard-grid">
+        <section class="panel dash-panel">
+          <h2 class="panel-title">Distribuição de interesse</h2>
+          @if (hasAnalyzed()) {
+            <ul class="dist-list">
+              @for (bar of distributionBars(); track bar.level) {
+                <li class="dist-row">
+                  <div class="dist-meta">
+                    <span>{{ bar.label }}</span>
+                    <span class="mono">{{ bar.count }}</span>
+                  </div>
+                  <div class="dist-track">
+                    <div class="dist-fill" [style.width.%]="bar.widthPct"></div>
+                  </div>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="hint">Gere a análise de uma conversa para ver a distribuição.</p>
+          }
+        </section>
+
+        <section class="panel dash-panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Últimas conversas</h2>
+            <a routerLink="/conversations" class="panel-link">Ver todas</a>
+          </div>
+          <ul class="recent-list">
+            @for (item of data.recent; track trackRecent($index, item)) {
+              <li>
+                <a [routerLink]="['/conversations', item.id]" class="recent-card">
+                  <div class="recent-top">
+                    <strong>{{ item.title }}</strong>
+                    <span class="mono recent-msgs">{{ item.total_messages }} msgs</span>
+                  </div>
+                  <div class="recent-bottom">
+                    @if (item.interest_level) {
+                      <app-signal-pulse
+                        [level]="item.interest_level"
+                        [width]="120"
+                        [height]="28"
+                        [animate]="false"
+                        [showDot]="true"
+                      />
+                      <span class="recent-level">{{ interestLevelLabel(item.interest_level) }}</span>
+                      @if (item.confidence_score !== null) {
+                        <span class="mono recent-conf">{{ item.confidence_score }}%</span>
+                      }
+                    } @else {
+                      <span class="hint">Sem análise</span>
+                    }
+                    <span class="mono recent-date">{{
+                      (item.analyzed_at || item.updated_at) | date: 'dd/MM/yy HH:mm'
+                    }}</span>
+                  </div>
+                </a>
+              </li>
+            }
+          </ul>
+        </section>
+      </div>
+    }
+  }
+</section>

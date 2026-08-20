@@ -1,0 +1,142 @@
+@use '../../features/marketing/marketing-shared.scss' as *;
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.shell-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* Mais ar acima/abaixo — barra antes era height:60 + padding:0 */
+  padding: 20px 24px;
+  min-height: 80px;
+  height: auto;
+  box-sizing: border-box;
+  background: rgba(255, 252, 248, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 20px rgba(35, 28, 43, 0.04);
+}
+
+.shell-nav-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  min-height: 40px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--flemm-midnight);
+  margin-right: 8px;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.brand-logo.brand-logo--shell {
+  display: block;
+  height: 32px;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  a {
+    text-decoration: none;
+    color: var(--text-body);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    padding: 10px 16px;
+    border-radius: 999px;
+    transition: color 0.15s, background 0.15s;
+
+    &:hover {
+      color: var(--flemm-plum);
+      background: rgba(230, 210, 236, 0.65);
+    }
+
+    &.active {
+      color: var(--flemm-plum);
+      background: var(--flemm-lilac-card);
+      box-shadow: inset 0 0 0 1px rgba(91, 45, 94, 0.15);
+    }
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-email {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-body);
+  margin-right: 4px;
+  line-height: 1.4;
+}
+
+.logout-btn {
+  background: #fff;
+  border: 1px solid var(--border-strong);
+  color: var(--text-body);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+
+  &:hover {
+    color: var(--flemm-plum);
+    border-color: rgba(139, 74, 107, 0.35);
+    background: var(--accent-primary-dim);
+  }
+}
+
+.shell-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+@media (max-width: 640px) {
+  .shell-nav {
+    padding: 16px 12px;
+    min-height: 68px;
+    gap: 4px;
+  }
+
+  .brand-logo.brand-logo--shell {
+    height: 28px;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .user-email {
+    display: none;
+  }
+
+  .shell-content {
+    padding: 16px 12px 48px;
+  }
+}

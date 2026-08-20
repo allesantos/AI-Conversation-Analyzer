@@ -1,0 +1,47 @@
+<section class="conversations-page">
+  <h1 class="page-title">Suas <span class="script-accent">conversas</span></h1>
+  @if (importWelcome()) {
+    <div class="import-welcome">
+      Quase lá — crie uma conversa abaixo e importe seu arquivo .txt ou .zip.
+    </div>
+  }
+  <p class="page-lead">Crie um registro e abra para importar o export do WhatsApp.</p>
+
+  <div class="create-row flemm-card">
+    <form [formGroup]="form" (ngSubmit)="create()">
+      <mat-form-field appearance="outline">
+        <mat-label>Título da conversa</mat-label>
+        <input matInput formControlName="title" maxlength="200" />
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit" [disabled]="creating()">Criar</button>
+    </form>
+  </div>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <div class="conv-list">
+    @for (item of items(); track item.id) {
+      <a [routerLink]="['/conversations', item.id]" class="conv-item">
+        <div class="conv-info">
+          <span class="conv-title">{{ item.title }}</span>
+          <span class="conv-date">{{ item.created_at | date: 'dd/MM/yyyy' }}</span>
+        </div>
+        <button
+          class="delete-btn"
+          type="button"
+          (click)="remove($event, item)"
+          aria-label="Excluir conversa"
+          title="Excluir"
+        >
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+      </a>
+    } @empty {
+      <div class="flemm-empty">
+        <p>Nenhuma conversa ainda. Crie uma acima para começar.</p>
+      </div>
+    }
+  </div>
+</section>

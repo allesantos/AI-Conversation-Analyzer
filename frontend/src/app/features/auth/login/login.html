@@ -1,0 +1,67 @@
+<section class="auth-page">
+  <div class="auth-split">
+    <aside class="auth-visual-panel" aria-hidden="true">
+      <app-photo name="hero-chat" alt="" [cover]="true" />
+      <div class="photo-overlay">
+        <a routerLink="/" class="photo-brand-chip">
+          <img
+            src="/assets/images/analyzer-logo.png"
+            alt="Analyzer"
+            class="brand-logo brand-logo--chip"
+            width="1827"
+            height="401"
+          />
+        </a>
+        <div class="photo-copy">
+          <p class="photo-kicker">Análise inteligente de conversas</p>
+          <h2 class="photo-title">
+            Leia entre as linhas das suas
+            <span class="photo-script">conversas</span>
+          </h2>
+          <p class="photo-lead">
+            Evidências, reciprocidade e sinais de interesse — sem adivinhação.
+          </p>
+          <ul class="photo-trust">
+            <li>Export .txt ou .zip do WhatsApp</li>
+            <li>Transcrição de áudios com Whisper</li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <main class="auth-form-panel">
+      <div class="auth-form-inner">
+        <header class="auth-form-header">
+          <h1>Entrar</h1>
+          <p class="auth-subtitle">Acesse suas conversas e análises</p>
+        </header>
+
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <mat-form-field appearance="outline" class="auth-field">
+            <mat-label>E-mail</mat-label>
+            <input matInput type="email" formControlName="email" autocomplete="email" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="auth-field">
+            <mat-label>Senha</mat-label>
+            <input
+              matInput
+              type="password"
+              formControlName="password"
+              autocomplete="current-password"
+            />
+          </mat-form-field>
+          @if (error()) {
+            <p class="error">{{ error() }}</p>
+          }
+          <button class="btn-romance auth-submit" type="submit" [disabled]="loading()">
+            {{ loading() ? 'Entrando...' : 'Entrar' }}
+          </button>
+        </form>
+
+        <p class="auth-footer">
+          Não tem conta? <a routerLink="/register">Criar conta</a>
+        </p>
+      </div>
+    </main>
+  </div>
+</section>

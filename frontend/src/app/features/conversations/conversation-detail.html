@@ -1,0 +1,771 @@
+<section class="detail-page">
+  <input
+    [id]="audioInputElementId()"
+    type="file"
+    accept=".opus,.ogg,.mp3,.m4a,.wav,.aac,.amr,audio/*"
+    hidden
+    (change)="onAudioFileSelected($event)"
+  />
+
+  <nav class="detail-breadcrumb">
+    <a routerLink="/conversations" class="back-link">← Conversas</a>
+  </nav>
+
+  <header class="detail-toolbar panel">
+    <div class="toolbar-title">
+      <h1 class="conv-title">{{ detail()?.title || 'Conversa' }}</h1>
+      <div class="toolbar-meta">
+        @if ((detail()?.total_messages || 0) > 0) {
+          <span class="meta-pill mono">{{ detail()?.total_messages }} msgs</span>
+        }
+        @if (importedAudioCount() > 0) {
+          <span class="meta-pill mono">{{ importedAudioCount() }} áudios</span>
+        }
+        @if (pendingMediaCount() > 0) {
+          <span class="meta-pill meta-pill-warn mono">{{ pendingMediaCount() }} pendentes</span>
+        }
+        @for (participant of detail()?.participants || []; track participant.id) {
+          <span class="meta-pill">{{ participantLabel(participant) }}</span>
+        }
+      </div>
+    </div>
+    <div class="analysis-header-actions">
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="toggleImportPanel()"
+        [disabled]="importing() || analysisImportPhase() === 'uploading'"
+      >
+        {{ importPanelOpen() ? 'Fechar dados' : 'Atualizar dados' }}
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        class="analyze-action-btn"
+        [class.needs-refresh]="analysisNeedsRefresh()"
+        (click)="analyzeConversation()"
+        [disabled]="
+          analyzing() || (detail()?.total_messages || 0) === 0 || needsOwnerSelection()
+        "
+      >
+        {{ analysis() ? 'Reanalisar' : 'Gerar análise' }}
+        @if (analysisNeedsRefresh() && analysis()) {
+          <span class="action-badge">novo</span>
+        }
+      </button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <div class="error-banner">{{ error() }}</div>
+  }
+
+  @if (needsOwnerSelection()) {
+    <div class="panel owner-pick-banner">
+      <h2 class="panel-title">Quem é você nesta conversa?</h2>
+      <p class="hint">
+        Obrigatório para a análise de interesse e reciprocidade. Escolha o nome que representa você
+        no WhatsApp.
+      </p>
+      <div class="owner-pick-actions">
+        @for (participant of detail()?.participants || []; track participant.id) {
+          <button
+            mat-stroked-button
+            type="button"
+            class="owner-pick-btn"
+            [disabled]="settingOwner()"
+            (click)="selectOwner(participant.id)"
+          >
+            {{ participant.name }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <nav class="detail-tabs" aria-label="Seções da conversa">
+    <button
+      type="button"
+      class="detail-tab"
+      [class.is-active]="activeTab() === 'analise'"
+      (click)="setActiveTab('analise')"
+    >
+      Análise
+      @if (analysisNeedsRefresh()) {
+        <span class="tab-badge">novo</span>
+      }
+    </button>
+    <button
+      type="button"
+      class="detail-tab"
+      [class.is-active]="activeTab() === 'conversa'"
+      (click)="setActiveTab('conversa')"
+    >
+      Conversa
+      @if (pendingMediaCount() > 0) {
+        <span class="tab-badge tab-badge-warn">{{ pendingMediaCount() }}</span>
+      }
+    </button>
+    <button
+      type="button"
+      class="detail-tab"
+      [class.is-active]="activeTab() === 'explorar'"
+      (click)="setActiveTab('explorar')"
+    >
+      Explorar
+    </button>
+  </nav>
+
+  <div class="detail-tab-panels">
+    @if (activeTab() === 'analise') {
+      <div class="tab-panel tab-panel-analise">
+        @if (summaryStale() && analysis() && !analyzing()) {
+          <div class="info-banner">
+            Resumo textual pode estar desatualizado — <strong>Reanalisar</strong> atualiza o texto
+            (consome LLM).
+          </div>
+        }
+        @if (analysisNeedsRefresh() && !analyzing()) {
+          <div class="info-banner">
+            Há conteúdo novo. Use <strong>Reanalisar</strong> para incorporar na análise.
+          </div>
+        }
+        @if (analyzing()) {
+          <mat-progress-bar mode="indeterminate" />
+          @if (analyzeProcessingMessage(); as pm) {
+            <p class="processing-msg">{{ pm }}</p>
+          }
+        }
+
+        @if ((detail()?.total_messages || 0) === 0) {
+          <div class="panel empty-hero">
+            <p class="hint">Importe uma conversa do WhatsApp para começar a análise.</p>
+            <button mat-flat-button color="primary" type="button" (click)="toggleImportPanel()">
+              Atualizar dados
+            </button>
+          </div>
+        } @else if (!interestLevel() && !analyzing()) {
+          <div class="panel empty-hero">
+            <p class="hint">Ainda sem análise. Clique em <strong>Gerar análise</strong> na barra acima.</p>
+          </div>
+        } @else if (interestLevel()) {
+          <div class="hero-grid">
+            <div class="panel hero-score">
+              <span class="score-tag">Nível de interesse</span>
+              <div class="score-main">
+                <div class="score-label-col">
+                  <span class="score-value">{{ interestLevelLabel(interestLevel()) }}</span>
+                  @if (interestScore() !== null) {
+                    <span class="score-numeric mono">({{ interestScore() }}/100)</span>
+                  }
+                </div>
+                <app-signal-pulse
+                  [level]="interestLevel()"
+                  [width]="200"
+                  [height]="56"
+                  [animate]="true"
+                  [showDot]="true"
+                />
+              </div>
+              <div class="confidence-row">
+                <span class="confidence-label">Confiança</span>
+                <span class="confidence-value mono">{{ confidenceScore() }}%</span>
+              </div>
+              <p class="disclaimer">
+                Com base nas evidências disponíveis — não é uma certeza sobre o que a outra pessoa
+                pensa ou sente.
+              </p>
+            </div>
+
+            <div class="panel hero-metrics">
+              <h3 class="hero-card-title">Métricas</h3>
+              <dl class="quick-metrics">
+                <div>
+                  <dt>Total</dt>
+                  <dd class="mono">{{ detail()?.total_messages || 0 }}</dd>
+                </div>
+                <div>
+                  <dt>Resp. mediana</dt>
+                  <dd class="mono">{{ metricMedianResponseLabel() }}</dd>
+                </div>
+                @for (entry of metricMessagesByParticipant(); track entry.name) {
+                  <div>
+                    <dt>{{ entry.name }}</dt>
+                    <dd class="mono">{{ entry.count }}</dd>
+                  </div>
+                }
+              </dl>
+            </div>
+
+            <div class="panel hero-summary">
+              <h3 class="hero-card-title">Resumo</h3>
+              @if (analysis(); as currentAnalysis) {
+                <p class="hero-summary-text">{{ currentAnalysis.summary }}</p>
+                <span class="meta mono"
+                  >{{ currentAnalysis.llm_model }} ·
+                  {{ currentAnalysis.updated_at | date: 'dd/MM/yy HH:mm' }}</span
+                >
+              } @else {
+                <p class="hint">Gere a análise para ver o resumo contextual.</p>
+              }
+            </div>
+          </div>
+        }
+
+        @if (timeline().length) {
+          <div class="panel charts-row">
+            <h2 class="panel-title">Evolução temporal</h2>
+            <div class="timeline-pulse-row">
+              <app-signal-pulse
+                [level]="interestLevel()"
+                [width]="720"
+                [height]="56"
+                [points]="timelineScores()"
+                [showDot]="false"
+              />
+            </div>
+            <div class="timeline-periods timeline-periods-compact">
+              @for (period of timeline(); track period.key) {
+                <div class="timeline-period">
+                  <div class="tp-header">
+                    <span class="tp-label">{{ period.label }}</span>
+                    <span class="tp-level">{{ interestLevelLabel(period.interest_level) }}</span>
+                  </div>
+                  <div class="tp-stats mono">
+                    <span>{{ period.message_count }} msgs</span>
+                    <span>{{ period.confidence_score }}% conf.</span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        @if (positiveSignals().length || neutralSignals().length || negativeSignals().length) {
+          <div class="signals-grid signals-grid-fixed">
+            @if (positiveSignals().length) {
+              <div class="signal-group signal-positive">
+                <h4>Sinais positivos <span class="signal-count">{{ positiveSignals().length }}</span></h4>
+                @for (item of positiveSignals(); track item.key) {
+                  <div class="signal-chip">{{ item.observation }}</div>
+                }
+              </div>
+            }
+            @if (neutralSignals().length) {
+              <div class="signal-group signal-neutral">
+                <h4>Sinais neutros <span class="signal-count">{{ neutralSignals().length }}</span></h4>
+                @for (item of neutralSignals(); track item.key) {
+                  <div class="signal-chip">{{ item.observation }}</div>
+                }
+              </div>
+            }
+            @if (negativeSignals().length) {
+              <div class="signal-group signal-negative">
+                <h4>Sinais negativos <span class="signal-count">{{ negativeSignals().length }}</span></h4>
+                @for (item of negativeSignals(); track item.key) {
+                  <div class="signal-chip">{{ item.observation }}</div>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        @if (evidence().length) {
+          <div class="panel evidence-layout">
+            <h2 class="panel-title">Evidências</h2>
+            <div class="evidence-columns">
+              <div class="evidence-list">
+                @for (item of evidence(); track item.id) {
+                  <div
+                    class="evidence-item"
+                    [class.ev-positive]="item.polarity === 'POSITIVE'"
+                    [class.ev-negative]="item.polarity === 'NEGATIVE'"
+                    [class.ev-neutral]="item.polarity === 'NEUTRAL'"
+                  >
+                    <div class="ev-dot"></div>
+                    <div class="ev-content">
+                      <strong>{{ item.signal_label }}</strong>
+                      <span>{{ item.observation }}</span>
+                      @if (item.message_ids.length) {
+                        <div class="ev-links">
+                          @for (messageId of uniqueEvidenceMessageIds(item.message_ids); track messageId) {
+                            <button
+                              type="button"
+                              class="ev-link-btn"
+                              [class.is-active]="isEvidencePreviewActive(item.id, messageId)"
+                              (click)="highlightEvidence(item.id, messageId)"
+                              [disabled]="evidencePreviewLoading()"
+                            >
+                              Ver mensagem
+                            </button>
+                          }
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+              @if (evidencePreviewMessage(); as preview) {
+                <aside class="evidence-preview-sidebar panel">
+                  <div class="evidence-preview-header">
+                    <div>
+                      <strong>{{ preview.sender_name || 'Sistema' }}</strong>
+                      <span class="mono evidence-preview-time">{{
+                        preview.timestamp | date: 'dd/MM/yy HH:mm'
+                      }}</span>
+                      @if (isHiddenFromTimeline(preview) || preview.metadata['transcription_resolved']) {
+                        <span class="evidence-preview-badge">Áudio transcrito</span>
+                      }
+                    </div>
+                    <div class="evidence-preview-actions">
+                      @if (analysisRemovalMessageId(preview); as removalId) {
+                        <button
+                          type="button"
+                          class="evidence-preview-delete"
+                          (click)="removeAnalysisMessage(removalId)"
+                          [disabled]="deletingAnalysisMessageId() === removalId"
+                        >
+                          {{
+                            deletingAnalysisMessageId() === removalId
+                              ? 'Excluindo…'
+                              : 'Excluir da análise'
+                          }}
+                        </button>
+                      }
+                      <button type="button" class="evidence-preview-close" (click)="closeEvidencePreview()">
+                        Fechar
+                      </button>
+                    </div>
+                  </div>
+                  <div class="evidence-preview-content">{{ preview.content }}</div>
+                </aside>
+              }
+            </div>
+          </div>
+        }
+
+        @if (analysisInsights(); as insights) {
+          @if (insights.observations.length || insights.inferences.length) {
+            <div class="insights-grid">
+              @if (insights.observations.length) {
+                <div class="panel insights-section">
+                  <h3>Observações</h3>
+                  <ul>
+                    @for (item of insights.observations; track item) {
+                      <li>{{ item }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+              @if (insights.inferences.length) {
+                <div class="panel insights-section">
+                  <h3>Inferências</h3>
+                  <ul>
+                    @for (item of insights.inferences; track item) {
+                      <li>{{ item }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+          }
+        }
+      </div>
+    }
+
+    @if (activeTab() === 'conversa') {
+      <div class="tab-panel tab-panel-conversa">
+        @if (importPanelOpen()) {
+          <div class="panel import-panel">
+            <h2 class="panel-title">Atualizar dados</h2>
+            <p class="hint">
+              Envie o export <span class="mono">.zip</span> (preferido), um
+              <span class="mono">.txt</span> ou áudios <span class="mono">.opus</span> soltos.
+              Reimports só processam o que for novo.
+            </p>
+            <form class="import-form import-form-stacked">
+              <label class="file-input-label" [class.has-file]="selectedUpdateFiles().length > 0">
+                <input
+                  type="file"
+                  multiple
+                  accept=".txt,text/plain,.zip,application/zip,.opus,.ogg,.mp3,.m4a,.wav,.aac,.amr,audio/*"
+                  (change)="onUpdateFilesSelected($event)"
+                />
+                @if (selectedUpdateFiles().length === 0) {
+                  Escolher arquivo(s)
+                } @else if (selectedUpdateFiles().length === 1) {
+                  {{ selectedUpdateFiles()[0].name }}
+                } @else {
+                  {{ selectedUpdateFiles().length }} arquivos selecionados
+                }
+              </label>
+              @if (selectedUpdateFiles().length > 0) {
+                <p class="hint">
+                  Selecionados:
+                  <span class="mono">{{ selectedUpdateAudioCount() }}</span> áudio(s) ·
+                  <span class="mono">{{ selectedUpdateChatCount() }}</span> chat (.txt/.zip).
+                  <strong>Só selecionar não processa</strong> — clique em
+                  <strong>Atualizar</strong>.
+                </p>
+              }
+              @if (showAudioFallbackSender()) {
+                <mat-form-field appearance="outline" class="analysis-sender-field">
+                  <mat-label>Autor padrão dos áudios (fallback)</mat-label>
+                  <mat-select
+                    [value]="analysisImportSenderId() || ''"
+                    (selectionChange)="setAnalysisImportSender($event.value)"
+                  >
+                    @for (participant of detail()?.participants || []; track participant.id) {
+                      <mat-option [value]="participant.id">{{
+                        participantLabel(participant)
+                      }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              }
+              <button
+                mat-flat-button
+                color="primary"
+                class="import-submit-btn"
+                type="button"
+                (click)="submitConversationUpdate()"
+                [disabled]="
+                  importing() ||
+                  analysisImportPhase() === 'uploading' ||
+                  selectedUpdateFiles().length === 0
+                "
+              >
+                @if (importing() || analysisImportPhase() === 'uploading') {
+                  Atualizando…
+                } @else {
+                  Atualizar
+                }
+              </button>
+            </form>
+            @if (importing() || analysisImportPhase() === 'uploading') {
+              <mat-progress-bar mode="indeterminate" />
+            }
+            @if (importSummary(); as summary) {
+              <p class="import-summary">
+                <span class="mono">{{ summary.total_messages }}</span> no arquivo ·
+                <span class="mono">{{ summary.messages_added ?? summary.total_messages }}</span> novas ·
+                <span class="mono">{{ summary.messages_skipped_duplicate ?? 0 }}</span> já existentes ·
+                <span class="mono">{{ summary.participants.length }}</span> participantes
+                @if (summary.import_format === 'zip' && (summary.audio_files_found ?? 0) > 0) {
+                  · áudios
+                  <span class="mono">{{ summary.audio_transcriptions_started ?? 0 }}</span> novos /
+                  <span class="mono">{{ summary.audio_transcriptions_reused ?? 0 }}</span>
+                  reaproveitados ({{ summary.audio_files_matched ?? 0 }}/{{
+                    summary.audio_files_found
+                  }}
+                  pareados)
+                }
+              </p>
+            }
+            @if (analysisImportPhase(); as importPhase) {
+              <div class="analysis-import-inline">
+                @if (importPhase === 'uploading') {
+                  <p class="hint">Transcrevendo áudios…</p>
+                }
+                @if (importPhase === 'done') {
+                  <p class="hint">
+                    Áudios:
+                    <span class="mono">{{ analysisImportSummary().completed }}</span> novos ·
+                    <span class="mono">{{ analysisImportSummary().skipped }}</span> já existiam ·
+                    <span class="mono">{{ analysisImportSummary().failed }}</span> falha(s).
+                  </p>
+                }
+                <ul class="analysis-import-list">
+                  @for (item of analysisImportItems(); track trackAnalysisImportItem($index, item)) {
+                    <li [class.analysis-import-failed]="item.status === 'failed'">
+                      <span class="analysis-import-name">{{ item.fileName }}</span>
+                      <span class="analysis-import-status" [attr.data-status]="item.status">
+                        {{ analysisImportStatusLabel(item.status) }}
+                      </span>
+                    </li>
+                  }
+                </ul>
+                <div class="analysis-import-actions">
+                  @if (importPhase === 'done' && analysisImportSummary().failed > 0) {
+                    <button mat-stroked-button type="button" (click)="retryFailedAnalysisImports()">
+                      Tentar falhas
+                    </button>
+                  }
+                  @if (importPhase === 'done') {
+                    <button mat-stroked-button type="button" (click)="dismissAnalysisImportPanel()">
+                      Limpar lista
+                    </button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @if ((detail()?.total_messages || 0) > 0) {
+          <div class="panel complete-media-panel">
+            <div class="panel-header">
+              <h2 class="panel-title">Completar mídias</h2>
+              @if (pendingMediaCount() > 0) {
+                <span class="meta-pill meta-pill-warn mono">{{ pendingMediaCount() }}</span>
+              }
+            </div>
+            @if (pendingMediaCount() > 0) {
+              <p class="hint">
+                Em cada item: <strong>Colar texto</strong> abre o campo, ou anexe o áudio.
+              </p>
+            } @else {
+              <p class="hint">Todas as mídias da timeline já têm texto (ou não há mídia oculta).</p>
+            }
+            <ul class="pending-media-list">
+              @for (message of pendingMediaMessages(); track message.id) {
+                <li class="pending-media-item">
+                  <div class="pending-media-meta">
+                    <strong>{{ message.sender_name || 'Desconhecido' }}</strong>
+                    <span class="mono">{{ message.timestamp | date: 'dd/MM/yy HH:mm' }}</span>
+                    <span class="msg-type-badge">
+                      {{ message.type === 'MEDIA_OCULTA' ? 'Mídia oculta' : 'Áudio' }}
+                    </span>
+                  </div>
+                  <div class="pending-media-actions">
+                    <button
+                      class="transcribe-btn"
+                      type="button"
+                      (click)="startPasteTranscription(message.id)"
+                      [disabled]="
+                        savingManualTranscription() || transcribingMessageId() === message.id
+                      "
+                    >
+                      Colar texto
+                    </button>
+                    <button
+                      class="transcribe-btn"
+                      type="button"
+                      (click)="startAudioUpload(message.id)"
+                      [disabled]="
+                        transcribingMessageId() === message.id || pastingMessageId() === message.id
+                      "
+                    >
+                      {{ transcribeButtonLabel(message) }}
+                    </button>
+                  </div>
+                  @if (pastingMessageId() === message.id) {
+                    <div class="paste-transcription-box">
+                      <textarea
+                        [formControl]="pasteTranscriptionControl"
+                        rows="4"
+                        maxlength="20000"
+                        placeholder="Cole o texto da transcrição…"
+                      ></textarea>
+                      <div class="paste-transcription-actions">
+                        <button
+                          mat-flat-button
+                          color="primary"
+                          type="button"
+                          (click)="submitPasteTranscription()"
+                          [disabled]="savingManualTranscription() || pasteTranscriptionControl.invalid"
+                        >
+                          @if (savingManualTranscription()) {
+                            Salvando…
+                          } @else {
+                            Salvar texto
+                          }
+                        </button>
+                        <button
+                          mat-stroked-button
+                          type="button"
+                          (click)="cancelPasteTranscription()"
+                          [disabled]="savingManualTranscription()"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  }
+                  @if (transcribingMessageId() === message.id) {
+                    <mat-progress-bar mode="indeterminate" />
+                    @if (transcriptionProcessingMessage(); as pm) {
+                      <p class="processing-msg">{{ pm }}</p>
+                    }
+                  }
+                </li>
+              } @empty {
+                <li class="pending-media-empty">Nada pendente no momento.</li>
+              }
+            </ul>
+            @if (analysisOnlyMessages().length) {
+              <button
+                mat-stroked-button
+                type="button"
+                class="analysis-only-toggle"
+                (click)="toggleAnalysisOnlyPanel()"
+              >
+                {{
+                  analysisOnlyPanelOpen()
+                    ? 'Ocultar áudios importados'
+                    : 'Áudios importados (' + analysisOnlyMessages().length + ')'
+                }}
+              </button>
+              @if (analysisOnlyPanelOpen()) {
+                <ul class="analysis-only-list">
+                  @for (item of analysisOnlyMessages(); track item.id) {
+                    <li class="analysis-only-item">
+                      <div class="analysis-only-meta">
+                        <strong>{{ item.sender_name || 'Desconhecido' }}</strong>
+                        <span class="mono">{{ item.timestamp | date: 'dd/MM/yy HH:mm' }}</span>
+                        @if (item.metadata['manual_transcription']) {
+                          <span class="analysis-only-badge">manual</span>
+                        }
+                      </div>
+                      <p class="analysis-only-preview">{{ analysisOnlyPreview(item) }}</p>
+                    </li>
+                  }
+                </ul>
+              }
+            }
+          </div>
+        }
+
+        <div class="panel messages-panel">
+          <div class="panel-header">
+            <h2 class="panel-title">Timeline de mensagens</h2>
+            <span class="mono msg-count"
+              >{{ visibleMessages().length }} de {{ detail()?.total_messages || 0 }}</span
+            >
+          </div>
+          <div class="messages-thread">
+            @for (message of visibleMessages(); track message.id) {
+              <div
+                [id]="'message-' + message.id"
+                class="msg-bubble"
+                [class.msg-system]="message.type === 'SYSTEM'"
+                [class.msg-highlighted]="highlightedMessageId() === message.id"
+              >
+                <div class="msg-header">
+                  <strong class="msg-sender">{{ message.sender_name || 'Sistema' }}</strong>
+                  <span class="msg-time mono">{{ message.timestamp | date: 'HH:mm' }}</span>
+                  @if (message.type !== 'TEXT' && message.type !== 'SYSTEM') {
+                    <span class="msg-type-badge">
+                      @if (message.metadata['transcribed']) {
+                        Áudio transcrito
+                      } @else if (message.type === 'MEDIA_OCULTA') {
+                        Mídia oculta
+                      } @else {
+                        {{ message.type }}
+                      }
+                    </span>
+                  }
+                </div>
+                @if (transcribingMessageId() === message.id) {
+                  <mat-progress-bar mode="indeterminate" />
+                  @if (transcriptionProcessingMessage(); as pm) {
+                    <p class="processing-msg">{{ pm }}</p>
+                  }
+                }
+                <div class="msg-content">{{ message.content }}</div>
+              </div>
+            } @empty {
+              <div class="empty-state-inline">
+                <p>Nenhuma mensagem importada.</p>
+              </div>
+            }
+          </div>
+          @if ((detail()?.total_messages || 0) > messages().length) {
+            <button class="load-more-btn" type="button" (click)="loadMore()">Carregar mais</button>
+          }
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'explorar') {
+      <div class="tab-panel tab-panel-explorar">
+        <div class="explorar-grid">
+          <div class="panel explorar-card">
+            <h2 class="panel-title">Perguntar</h2>
+            <form [formGroup]="askForm" (ngSubmit)="askQuestion()" class="ask-form ask-form-stacked">
+              <mat-form-field appearance="outline" class="ask-field">
+                <textarea
+                  matInput
+                  formControlName="question"
+                  rows="3"
+                  maxlength="1000"
+                  placeholder="Sua pergunta"
+                  aria-label="Sua pergunta"
+                ></textarea>
+              </mat-form-field>
+              <button
+                mat-flat-button
+                color="primary"
+                type="submit"
+                [disabled]="asking() || (detail()?.total_messages || 0) === 0"
+              >
+                Perguntar
+              </button>
+            </form>
+            @if (asking()) {
+              <mat-progress-bar mode="indeterminate" />
+            }
+            @if (askAnswer(); as answer) {
+              <div class="answer-section">
+                <p>{{ answer.answer }}</p>
+              </div>
+            }
+          </div>
+
+          <div class="panel explorar-card">
+            <h2 class="panel-title">Sugestões</h2>
+            <p class="sidebar-hint">
+              Cole a mensagem que você acabou de receber no WhatsApp. O histórico importado entra só
+              como contexto.
+            </p>
+            <form
+              [formGroup]="suggestionsForm"
+              (ngSubmit)="generateSuggestions()"
+              class="ask-form ask-form-stacked"
+            >
+              <mat-form-field appearance="outline" class="ask-field">
+                <textarea
+                  matInput
+                  formControlName="incomingMessage"
+                  rows="3"
+                  maxlength="4000"
+                  placeholder="Mensagem recebida agora"
+                  aria-label="Mensagem recebida agora"
+                ></textarea>
+              </mat-form-field>
+              <button
+                mat-flat-button
+                color="primary"
+                type="submit"
+                [disabled]="
+                  generatingSuggestions() ||
+                  suggestionsForm.invalid ||
+                  (detail()?.total_messages || 0) === 0
+                "
+              >
+                Gerar
+              </button>
+            </form>
+            @if (generatingSuggestions()) {
+              <mat-progress-bar mode="indeterminate" />
+            }
+            @if (suggestions().length) {
+              <div class="suggestions-stack">
+                @for (suggestion of suggestions(); track suggestion.id) {
+                  <div class="suggestion-card" [attr.data-category]="suggestion.category">
+                    <span class="sg-category">{{ categoryLabel(suggestion.category) }}</span>
+                    <p class="sg-text">{{ suggestion.suggested_text }}</p>
+                    <button class="sg-copy" type="button" (click)="copySuggestion(suggestion)">
+                      {{ copiedSuggestionId() === suggestion.id ? 'Copiado!' : 'Copiar' }}
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
