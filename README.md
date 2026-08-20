@@ -49,7 +49,7 @@ Demonstrar conhecimentos em:
 
 Telas principais do fluxo — da landing até a análise e exploração.
 
-> Coloque os prints em `docs/screenshots/` (nomes abaixo). Enquanto não houver imagens, a seção serve de guia visual para o portfólio.
+> Print 1 já incluído. Demais imagens em `docs/screenshots/` conforme o checklist (cadastro, login, dashboard…).
 
 <br>
 
@@ -586,7 +586,8 @@ Desenvolvido por **Alexandre Santos**
 
 ### Próximo
 
-- [ ] Screenshots em `docs/screenshots/`  
+- [x] Screenshot landing (`docs/screenshots/1-landing.png`)
+- [ ] Demais screenshots (register → usage)  
 - [ ] CI (GitHub Actions)  
 - [ ] Demo deployada  
 
