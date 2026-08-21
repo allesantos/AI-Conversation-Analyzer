@@ -7,6 +7,8 @@ docker/.env
 docs/DEPLOY.md
 deploy-vps.ps1
 docker/scripts/deploy-vps.sh
+docker/scripts/integrate-nginx.sh
+docker/scripts/obtain-cert-subdomain.sh
 
 # Python
 __pycache__/
