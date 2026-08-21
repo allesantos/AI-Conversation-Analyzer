@@ -548,18 +548,11 @@ Confirme portas **55432** e **56379** no `.env`.
 
 Frontend deve estar em `http://localhost:14200` (default do `cors_origins`).
 
-### Push GitHub com duas contas
-
-Este repo usa SSH alias `github.com-allesantos`. Ver `~/.ssh/config` e remote:
-
-`git@github.com-allesantos:allesantos/AI-Conversation-Analyzer.git`
-
 ---
 
 ## Licença
 
-Uso do código sob termos a definir pelo autor (portfólio).  
-Referências de terceiros e licenças: [docs/THIRD_PARTY.md](docs/THIRD_PARTY.md).
+Uso do código sob termos a definir pelo autor (portfólio).
 
 ---
 
