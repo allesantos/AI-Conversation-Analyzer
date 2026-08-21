@@ -49,7 +49,7 @@ Demonstrar conhecimentos em:
 
 Telas principais do fluxo — da landing até a análise e exploração.
 
-> Print 1 já incluído. Demais imagens em `docs/screenshots/` conforme o checklist (cadastro, login, dashboard…).
+> Todas as telas do fluxo principal estão em `docs/screenshots/` (landing → usage).
 
 <br>
 
@@ -587,7 +587,7 @@ Desenvolvido por **Alexandre Santos**
 ### Próximo
 
 - [x] Screenshot landing (`docs/screenshots/1-landing.png`)
-- [ ] Demais screenshots (register → usage)  
+- [x] Demais screenshots (register → usage)  
 - [ ] CI (GitHub Actions)  
 - [ ] Demo deployada  
 
