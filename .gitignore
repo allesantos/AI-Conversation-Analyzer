@@ -3,6 +3,11 @@
 !.env.example
 docker/.env
 
+# Deploy privado (VPS) — não versionar em repo público
+docs/DEPLOY.md
+deploy-vps.ps1
+docker/scripts/deploy-vps.sh
+
 # Python
 __pycache__/
 *.py[cod]

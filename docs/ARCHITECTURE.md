@@ -288,8 +288,7 @@ AI-Conversation-Analyzer/
 │   ├── THIRD_PARTY.md
 │   ├── DECISIONS.md
 │   ├── DEVELOPMENT.md
-│   ├── API.md
-│   └── DEPLOY.md            (opcional / VPS)
+│   └── API.md
 ├── infra/
 └── README.md
 ```
@@ -731,7 +730,7 @@ O **MVP funcional** está entregue. Prioridades de evolução (não bloqueiam o 
 3. Providers LLM/transcrição adicionais (Anthropic, Groq, Whisper local)
 4. Planos FREE / PRO (sem cobrança no MVP)
 
-Demo pública e regras de acesso (`ai_access_enabled`, cotas) são camada operacional de portfólio — ver README e `docs/DEPLOY.md` se necessário; não alteram a arquitetura de domínio.
+Demo pública e regras de acesso (`ai_access_enabled`, cotas) são camada operacional de portfólio — ver README; não alteram a arquitetura de domínio.
 
 ---
 
