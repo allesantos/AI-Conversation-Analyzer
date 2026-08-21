@@ -214,4 +214,31 @@
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-actions {
+    width: 100%;
+
+    a,
+    button {
+      flex: 1 1 auto;
+      min-height: 44px;
+      text-align: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-actions {
+    flex-direction: column;
+
+    a,
+    button {
+      width: 100%;
+    }
+  }
 }

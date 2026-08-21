@@ -142,6 +142,7 @@ body {
 
 html {
   background-color: var(--flemm-paper);
+  overflow-x: clip;
 }
 
 body {
@@ -154,6 +155,24 @@ body {
   font-size: 15px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
+@media (max-width: 640px) {
+  body {
+    background-attachment: scroll;
+    font-size: 15px;
+  }
+
+  .page-title {
+    font-size: clamp(1.45rem, 7vw, 1.85rem);
+    line-height: 1.2;
+  }
+
+  .page-lead {
+    font-size: 14px;
+  }
 }
 
 // ---------------------------------------------------------------------------

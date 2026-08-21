@@ -60,7 +60,7 @@
             <span class="usage-day-meta-count">{{ day.records.length }} chamada(s)</span>
           </div>
 
-          <div class="flemm-table-wrap">
+          <div class="flemm-table-wrap usage-table-desktop">
             <table class="flemm-table">
               <thead>
                 <tr>
@@ -87,6 +87,31 @@
                 }
               </tbody>
             </table>
+          </div>
+
+          <div class="usage-record-cards" aria-label="Registros do dia">
+            @for (r of day.records; track trackRecord($index, r)) {
+              <article class="usage-record-card">
+                <header class="usage-record-card__head">
+                  <span class="usage-record-card__op">{{ operationLabel(r.operation) }}</span>
+                  <span class="mono usage-record-card__time">{{ r.created_at | date:'HH:mm' }}</span>
+                </header>
+                <dl class="usage-record-card__meta">
+                  <div>
+                    <dt>Modelo</dt>
+                    <dd class="mono">{{ r.provider }} · {{ r.model }}</dd>
+                  </div>
+                  <div>
+                    <dt>Tokens</dt>
+                    <dd class="mono">{{ r.input_tokens | number }} in · {{ r.output_tokens | number }} out</dd>
+                  </div>
+                  <div>
+                    <dt>Custo</dt>
+                    <dd class="mono">{{ formatCostPair(r.estimated_cost) }}</dd>
+                  </div>
+                </dl>
+              </article>
+            }
           </div>
         </div>
       }

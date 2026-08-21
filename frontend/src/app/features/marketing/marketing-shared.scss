@@ -369,4 +369,26 @@
     max-width: 100%;
     margin-top: auto;
   }
+
+  .marketing-nav {
+    padding: 14px 16px;
+    padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  }
+}
+
+@media (max-width: 480px) {
+  .marketing-nav {
+    padding-left: 12px;
+    padding-right: 12px;
+    gap: 10px;
+  }
+
+  .marketing-cta-row .marketing-cta,
+  .marketing-cta-row .btn-romance,
+  .auth-actions .btn-romance {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
+  }
 }

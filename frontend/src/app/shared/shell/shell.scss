@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .shell-nav {
@@ -11,11 +12,10 @@
   top: 0;
   z-index: 100;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  /* Mais ar acima/abaixo — barra antes era height:60 + padding:0 */
+  flex-direction: column;
+  align-items: stretch;
   padding: 20px 24px;
+  padding-top: calc(20px + env(safe-area-inset-top, 0px));
   min-height: 80px;
   height: auto;
   box-sizing: border-box;
@@ -49,7 +49,7 @@
   display: block;
   height: 32px;
   width: auto;
-  max-width: none;
+  max-width: min(160px, 42vw);
   object-fit: contain;
 }
 
@@ -99,6 +99,10 @@
   color: var(--text-body);
   margin-right: 4px;
   line-height: 1.4;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .logout-btn {
@@ -128,12 +132,47 @@
   }
 }
 
+.menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--flemm-plum);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background var(--app-motion-fast, 140ms) ease,
+    border-color var(--app-motion-fast, 140ms) ease;
+
+  .material-icons {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  &:hover {
+    background: var(--flemm-lilac-card);
+    border-color: rgba(139, 74, 107, 0.35);
+  }
+}
+
+.shell-mobile-panel {
+  display: none;
+}
+
 .shell-content {
   flex: 1 1 auto;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   padding: 32px 24px 40px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
 }
 
 .demo-ai-banner {
@@ -154,6 +193,7 @@
   a {
     color: var(--flemm-plum);
     font-weight: 800;
+    word-break: break-word;
   }
 
   &--quota {
@@ -170,7 +210,7 @@
 .shell-footer {
   flex-shrink: 0;
   border-top: 1px solid var(--border-subtle);
-  padding: 16px 24px 22px;
+  padding: 16px 24px calc(22px + env(safe-area-inset-bottom, 0px));
   background: rgba(255, 252, 248, 0.85);
   text-align: center;
 
@@ -188,26 +228,113 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 720px) {
   .shell-nav {
-    padding: 16px 12px;
-    min-height: 68px;
-    gap: 4px;
+    padding: 12px 14px;
+    padding-top: calc(12px + env(safe-area-inset-top, 0px));
+    min-height: 64px;
+  }
+
+  .shell-nav--menu-open {
+    box-shadow: 0 12px 32px rgba(35, 28, 43, 0.1);
   }
 
   .brand-logo.brand-logo--shell {
-    height: 28px;
+    height: 26px;
   }
 
-  .brand-text {
+  .nav-links--desktop,
+  .user-email,
+  .logout-btn--desktop {
     display: none;
   }
 
-  .user-email {
-    display: none;
+  .menu-toggle {
+    display: inline-flex;
+  }
+
+  .shell-mobile-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    max-width: 1280px;
+    margin: 12px auto 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+    animation: shell-panel-in var(--app-motion-med, 200ms) var(--app-motion-ease, ease);
+
+    a {
+      text-decoration: none;
+      color: var(--text-body);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 14px 16px;
+      border-radius: 14px;
+      min-height: 44px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+
+      &.active {
+        color: var(--flemm-plum);
+        background: var(--flemm-lilac-card);
+        box-shadow: inset 0 0 0 1px rgba(91, 45, 94, 0.15);
+      }
+    }
+  }
+
+  .shell-mobile-email {
+    margin: 8px 4px 0;
+    padding: 0 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .logout-btn--mobile {
+    width: 100%;
+    margin-top: 4px;
+    min-height: 44px;
   }
 
   .shell-content {
-    padding: 16px 12px 48px;
+    padding: 16px 14px 48px;
+    padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .demo-ai-banner {
+    padding: 10px 14px;
+    text-align: left;
+
+    p {
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  }
+
+  .shell-footer {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+@keyframes shell-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-mobile-panel {
+    animation: none;
   }
 }

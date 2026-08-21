@@ -137,14 +137,28 @@ form {
 
   .auth-visual-panel {
     height: auto;
-    min-height: min(40vh, 320px);
+    min-height: min(36vh, 280px);
   }
 
   .auth-form-panel {
     height: auto;
     border-left: none;
     padding: 28px 24px 40px;
+    padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
     overflow: visible;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-form-panel {
+    padding: 22px 16px 36px;
+    padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .auth-form-panel button[mat-flat-button],
+  .auth-form-panel button[mat-raised-button] {
+    width: 100%;
+    min-height: 44px;
   }
 }
 

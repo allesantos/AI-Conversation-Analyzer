@@ -1,6 +1,6 @@
-<nav class="shell-nav">
+<nav class="shell-nav" [class.shell-nav--menu-open]="menuOpen()">
   <div class="shell-nav-inner">
-    <a routerLink="/dashboard" class="brand">
+    <a routerLink="/dashboard" class="brand" (click)="closeMenu()">
       <img
         src="/assets/images/analyzer-logo.png"
         alt="Analyzer"
@@ -9,15 +9,46 @@
         height="401"
       />
     </a>
-    <div class="nav-links">
+
+    <div class="nav-links nav-links--desktop">
       <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
       <a routerLink="/conversations" routerLinkActive="active">Conversas</a>
       <a routerLink="/usage" routerLinkActive="active">Uso</a>
     </div>
+
     <span class="spacer"></span>
+
     <span class="user-email">{{ auth.user()?.email }}</span>
-    <button class="logout-btn" type="button" (click)="auth.logout()">Sair</button>
+    <button class="logout-btn logout-btn--desktop" type="button" (click)="auth.logout()">Sair</button>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="shell-mobile-menu"
+      [attr.aria-label]="menuOpen() ? 'Fechar menu' : 'Abrir menu'"
+    >
+      <span class="material-icons" aria-hidden="true">{{ menuOpen() ? 'close' : 'menu' }}</span>
+    </button>
   </div>
+
+  @if (menuOpen()) {
+    <div id="shell-mobile-menu" class="shell-mobile-panel" role="navigation" aria-label="Menu principal">
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}"
+        (click)="closeMenu()"
+      >Dashboard</a>
+      <a routerLink="/conversations" routerLinkActive="active" (click)="closeMenu()">Conversas</a>
+      <a routerLink="/usage" routerLinkActive="active" (click)="closeMenu()">Uso</a>
+      @if (auth.user()?.email; as email) {
+        <p class="shell-mobile-email">{{ email }}</p>
+      }
+      <button class="logout-btn logout-btn--mobile" type="button" (click)="logoutMobile()">Sair</button>
+    </div>
+  }
 </nav>
 @if (auth.isAuthenticated() && !auth.hasAiAccess()) {
   <div class="demo-ai-banner" role="status">

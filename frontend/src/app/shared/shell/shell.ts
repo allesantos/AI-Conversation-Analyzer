@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService, DEMO_CONTACT_EMAIL } from '../../core/services/auth.service';
 
@@ -13,6 +13,7 @@ export class ShellComponent implements OnInit {
   readonly year = new Date().getFullYear();
   readonly contactEmail = DEMO_CONTACT_EMAIL;
   readonly contactMailto = `mailto:${DEMO_CONTACT_EMAIL}?subject=Liberação%20Analyzer%20demo`;
+  readonly menuOpen = signal(false);
 
   readonly quotaLabel = computed(() => {
     const quota = this.auth.user()?.demo_quota;
@@ -31,5 +32,18 @@ export class ShellComponent implements OnInit {
     if (this.auth.isAuthenticated()) {
       this.auth.refreshMe().subscribe({ error: () => undefined });
     }
+  }
+
+  toggleMenu(): void {
+    this.menuOpen.update((open) => !open);
+  }
+
+  closeMenu(): void {
+    this.menuOpen.set(false);
+  }
+
+  logoutMobile(): void {
+    this.closeMenu();
+    this.auth.logout();
   }
 }

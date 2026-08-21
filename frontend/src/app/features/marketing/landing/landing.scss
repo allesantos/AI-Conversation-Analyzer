@@ -829,13 +829,20 @@
   }
 
   .hero-stage {
-    grid-template-columns: minmax(180px, 240px) minmax(160px, 1fr);
-    max-width: 460px;
-    gap: 12px;
+    grid-template-columns: 1fr;
+    max-width: 300px;
+    gap: 14px;
   }
 
   .hero-phone {
+    grid-column: 1;
+    grid-row: auto;
     max-height: clamp(360px, 62vw, 480px);
+  }
+
+  .hero-widgets {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .mockup-slot--hero {
@@ -923,6 +930,35 @@
   .marketing-nav-links {
     width: 100%;
     justify-content: flex-end;
+  }
+
+  .landing-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .landing-nav-auth {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .marketing-nav-links .landing-nav-cta.btn-romance {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .landing-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+
+    .landing-submit,
+    .btn-romance {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+      box-sizing: border-box;
+    }
   }
 
   .hero-stage {
