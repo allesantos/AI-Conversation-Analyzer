@@ -437,18 +437,7 @@ API e worker se conectam aos containers via `localhost:55432` (Postgres) e `loca
 
 ### Contexto
 
-Neste Windows já havia vários containers publicados em portas padrão:
-
-| Container | Porta host |
-|-----------|------------|
-| `[other-local-service]` | 5432 |
-| `[other-local-service]` | 5433 |
-| Redis (publicado) | 6379 |
-| `[other-local-service]` | 8000 |
-| `[other-local-service]` | 8787 |
-| UDP no host | 5050 |
-
-Usar 5432/6379/8000/4200/5050 neste projeto colidiria com esses serviços ou com o default do Angular/pgAdmin.
+Neste Windows já havia outros containers e serviços publicados em portas padrão (Postgres, Redis, backends e UDP no host). Usar 5432/6379/8000/4200/5050 neste projeto colidiria com esses serviços ou com o default do Angular/pgAdmin.
 
 ### Decisão
 

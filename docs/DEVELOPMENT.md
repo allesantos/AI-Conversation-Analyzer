@@ -4,13 +4,13 @@ Ambiente local conforme ADR-015 e ADR-016: apenas PostgreSQL e Redis no Docker; 
 
 ## Mapa de portas (host)
 
-| Serviço | Porta host | Evita conflito com |
-|---------|------------|--------------------|
-| PostgreSQL (aca-postgres) | **55432** | `[other-local-service]` em 5432, `[other-local-service]` em 5433 |
-| Redis (aca-redis) | **56379** | Redis já publicado em 6379 |
-| FastAPI | **18000** | `[other-local-service]` em 8000, xflix em 8787 |
-| Angular | **14200** | Porta padrão 4200 do `ng serve` |
-| pgAdmin (opcional) | **15050** | UDP 5050 já em uso no host |
+| Serviço | Porta host | Motivo |
+|---------|------------|--------|
+| PostgreSQL (aca-postgres) | **55432** | Evita conflito com Postgres padrão (5432) e outras instâncias locais |
+| Redis (aca-redis) | **56379** | Evita conflito com Redis padrão (6379) |
+| FastAPI | **18000** | Evita conflito com uvicorn/defaults comuns (8000) |
+| Angular | **14200** | Evita a porta padrão 4200 do `ng serve` |
+| pgAdmin (opcional) | **15050** | Evita conflito com 5050 no host |
 
 Credenciais do Postgres deste projeto: user/senha/db = `aca`. Isolamento real é pela **porta**.
 

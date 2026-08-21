@@ -1,10 +1,10 @@
 name: aca
 
-# Portas de host NÃO padrão — auditadas em 2026-08-19 contra containers locais.
+# Portas de host NÃO padrão — evitam conflito com outros serviços locais.
 # Internamente o container continua na porta nativa do serviço.
-#   PostgreSQL  55432 → 5432   (5432=clinica-postgres, 5433=[other-local-service])
-#   Redis       56379 → 6379   (6379 já estava publicada)
-#   pgAdmin     15050 → 80     (5050 UDP em uso no host)
+#   PostgreSQL  55432 → 5432
+#   Redis       56379 → 6379
+#   pgAdmin     15050 → 80
 
 services:
   postgres:

@@ -9,6 +9,9 @@ deploy-vps.ps1
 docker/scripts/deploy-vps.sh
 docker/scripts/integrate-nginx.sh
 docker/scripts/obtain-cert-subdomain.sh
+docker/docker-compose.prod.yml
+docker/.env.prod.example
+docker/nginx/
 
 # Python
 __pycache__/
