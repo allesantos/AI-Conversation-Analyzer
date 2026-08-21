@@ -1,7 +1,17 @@
+export interface DemoQuota {
+  unlimited: boolean;
+  llm_used: number;
+  llm_limit: number;
+  audio_seconds_used: number;
+  audio_seconds_limit: number;
+}
+
 export interface User {
   id: string;
   email: string;
   created_at: string;
+  ai_access_enabled?: boolean;
+  demo_quota?: DemoQuota | null;
 }
 
 export interface AuthResponse {

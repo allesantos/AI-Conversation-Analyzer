@@ -10,6 +10,8 @@ from app.api.deps import (
     DbSession,
     EmbeddingServiceDep,
     LLMDep,
+    LlmQuotaUser,
+    TranscriptionQuotaUser,
     TranscriptionServiceDep,
     get_analysis_service,
 )
@@ -168,7 +170,7 @@ async def set_conversation_owner(
 )
 async def analyze_conversation(
     conversation_id: UUID,
-    current_user: CurrentUser,
+    current_user: LlmQuotaUser,
     service: AnalysisSvc,
     force: Annotated[bool, Query(description="Ignora cache e regenera o resumo via LLM")] = False,
 ) -> AnalyzeResponse:
@@ -202,7 +204,7 @@ async def get_conversation_timeline(
 async def ask_conversation(
     conversation_id: UUID,
     payload: AskRequest,
-    current_user: CurrentUser,
+    current_user: LlmQuotaUser,
     service: AnalysisSvc,
 ) -> AskResponse:
     ai_rate_limiter.check(current_user.id)
@@ -216,7 +218,7 @@ async def ask_conversation(
 async def generate_suggestions(
     conversation_id: UUID,
     payload: SuggestionsRequest,
-    current_user: CurrentUser,
+    current_user: LlmQuotaUser,
     engine: ResponseEngineSvc,
 ) -> SuggestionsResponse:
     ai_rate_limiter.check(current_user.id)
@@ -253,7 +255,7 @@ async def create_manual_transcription(
 )
 async def upload_audio(
     conversation_id: UUID,
-    current_user: CurrentUser,
+    current_user: TranscriptionQuotaUser,
     service: TranscriptionSvc,
     file: Annotated[UploadFile, File()],
     message_id: Annotated[UUID | None, Form()] = None,

@@ -27,5 +27,5 @@ async def login(payload: LoginRequest, service: AuthSvc) -> AuthResponse:
 
 
 @router.get("/me", response_model=UserRead)
-async def me(current_user: CurrentUser) -> UserRead:
-    return UserRead.model_validate(current_user)
+async def me(current_user: CurrentUser, service: AuthSvc) -> UserRead:
+    return await service.build_user_read(current_user)

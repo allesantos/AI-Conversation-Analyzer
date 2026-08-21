@@ -26,6 +26,7 @@ import {
 } from '../../core/models/api.models';
 import { ConversationService } from '../../core/services/conversation.service';
 import { PendingImportService } from '../../core/services/pending-import.service';
+import { DEMO_AI_LOCKED_MESSAGE } from '../../core/services/auth.service';
 import {
   DEFAULT_EMBEDDING_PROCESSING_MESSAGE,
   DEFAULT_TRANSCRIPTION_PROCESSING_MESSAGE,
@@ -1223,6 +1224,12 @@ export class ConversationDetailComponent implements OnInit {
   }
 
   private readError(err: HttpErrorResponse, fallback: string): string {
+    if (
+      err.status === 403 &&
+      (err.error?.code === 'DEMO_AI_LOCKED' || err.error?.code === 'DEMO_QUOTA_EXCEEDED')
+    ) {
+      return typeof err.error?.detail === 'string' ? err.error.detail : DEMO_AI_LOCKED_MESSAGE;
+    }
     if (typeof err.error?.detail === 'string') {
       return err.error.detail;
     }

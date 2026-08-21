@@ -187,6 +187,8 @@ Consumo agregado (tokens, áudio, custo estimado) por dia/operação.
 
 - **URL:** https://analyzer.allecursos.cloud  
 - Deploy VPS: ver [docs/DEPLOY.md](docs/DEPLOY.md)
+- Contas novas: cadastro/import ok; **IA bloqueada** até liberação (exceto `alledesenvolvimento@gmail.com`)
+- Contas liberadas: cota mensal **20 LLM** + **10 min** Whisper (owner sem limite)
 
 ---
 

@@ -20,10 +20,16 @@ from app.conversation.types import MessageType, ParticipantRole
 from app.conversation.whatsapp_parser import WhatsAppParser
 from app.conversation.whatsapp_zip import extract_whatsapp_archive
 from app.core.config import get_settings
+from app.core.demo_access import (
+    DemoQuotaExceededError,
+    ensure_transcription_quota,
+    user_has_ai_access,
+)
 from app.core.exceptions import BadRequestError, NotFoundError, PayloadTooLargeError
 from app.models.conversation import Conversation
 from app.repositories.conversation import ConversationRepository
 from app.repositories.message import MessageRepository, ParticipantRepository
+from app.repositories.user import UserRepository
 from app.schemas.conversation import (
     ConversationCreate,
     ConversationDetail,
@@ -52,6 +58,7 @@ class ConversationService:
         self.conversations = ConversationRepository(session)
         self.participants = ParticipantRepository(session)
         self.messages = MessageRepository(session)
+        self.users = UserRepository(session)
 
     async def create(self, user_id: UUID, payload: ConversationCreate) -> ConversationRead:
         conversation = Conversation(user_id=user_id, title=payload.title.strip())
@@ -259,6 +266,17 @@ class ConversationService:
         )
 
         if not archive.audio_files or self.transcription_service is None:
+            return summary
+
+        user = await self.users.get_by_id(user_id)
+        if user is None or not user_has_ai_access(user, settings):
+            # Demo: import TXT/ZIP ok, mas não dispara Whisper
+            return summary
+
+        try:
+            await ensure_transcription_quota(self.session, user, settings)
+        except DemoQuotaExceededError:
+            # Sem cota de áudio: importa o chat, não enfileira Whisper
             return summary
 
         rows = await self.messages.list_all_for_conversation(conversation.id)

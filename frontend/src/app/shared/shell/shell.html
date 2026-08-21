@@ -19,6 +19,19 @@
     <button class="logout-btn" type="button" (click)="auth.logout()">Sair</button>
   </div>
 </nav>
+@if (auth.isAuthenticated() && !auth.hasAiAccess()) {
+  <div class="demo-ai-banner" role="status">
+    <p>
+      Versão demo — análise, perguntas, sugestões e transcrição por IA estão bloqueadas.
+      Para solicitar liberação, escreva para
+      <a [href]="contactMailto">{{ contactEmail }}</a>.
+    </p>
+  </div>
+} @else if (auth.isAuthenticated() && quotaLabel(); as label) {
+  <div class="demo-ai-banner demo-ai-banner--quota" role="status">
+    <p>{{ label }}</p>
+  </div>
+}
 <main class="shell-content">
   <router-outlet />
 </main>

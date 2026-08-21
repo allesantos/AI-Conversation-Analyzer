@@ -136,6 +136,37 @@
   padding: 32px 24px 40px;
 }
 
+.demo-ai-banner {
+  border-bottom: 1px solid rgba(212, 160, 74, 0.45);
+  background: linear-gradient(90deg, rgba(248, 236, 212, 0.95), rgba(255, 252, 248, 0.98));
+  padding: 12px 24px;
+  text-align: center;
+
+  p {
+    margin: 0 auto;
+    max-width: 1280px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.45;
+    color: #7a4e12;
+  }
+
+  a {
+    color: var(--flemm-plum);
+    font-weight: 800;
+  }
+
+  &--quota {
+    border-bottom-color: rgba(75, 22, 76, 0.12);
+    background: linear-gradient(90deg, rgba(230, 210, 236, 0.55), rgba(255, 252, 248, 0.98));
+
+    p {
+      color: var(--flemm-plum);
+      font-weight: 600;
+    }
+  }
+}
+
 .shell-footer {
   flex-shrink: 0;
   border-top: 1px solid var(--border-subtle);

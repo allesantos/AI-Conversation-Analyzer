@@ -8,6 +8,12 @@ import { AuthResponse, User } from '../models/api.models';
 const TOKEN_KEY = 'aca_access_token';
 const USER_KEY = 'aca_user';
 
+export const DEMO_CONTACT_EMAIL = 'alledesenvolvimento@gmail.com';
+
+export const DEMO_AI_LOCKED_MESSAGE =
+  'Esta é uma versão demo. O uso de IA (análise, perguntas, sugestões e transcrição) ' +
+  `está bloqueado. Entre em contato para solicitar liberação: ${DEMO_CONTACT_EMAIL}`;
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
@@ -19,6 +25,7 @@ export class AuthService {
   readonly token = this.tokenSignal.asReadonly();
   readonly user = this.userSignal.asReadonly();
   readonly isAuthenticated = computed(() => !!this.tokenSignal());
+  readonly hasAiAccess = computed(() => !!this.userSignal()?.ai_access_enabled);
 
   register(email: string, password: string, termsAccepted: boolean): Observable<AuthResponse> {
     return this.http
@@ -34,6 +41,15 @@ export class AuthService {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/auth/login`, { email, password })
       .pipe(tap((response) => this.persistSession(response)));
+  }
+
+  refreshMe(): Observable<User> {
+    return this.http.get<User>(`${environment.apiUrl}/auth/me`).pipe(
+      tap((user) => {
+        localStorage.setItem(USER_KEY, JSON.stringify(user));
+        this.userSignal.set(user);
+      }),
+    );
   }
 
   logout(): void {

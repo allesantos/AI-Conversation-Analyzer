@@ -4,6 +4,7 @@ from sqlalchemy import text
 from starlette.requests import Request
 
 from app.api.deps import DbSession
+from app.core.demo_access import DemoAiLockedError, DemoQuotaExceededError
 from app.core.exceptions import AppError, ProcessingError
 
 
@@ -14,6 +15,11 @@ def register_error_handlers(app: FastAPI) -> None:
             return JSONResponse(
                 status_code=exc.status_code,
                 content={"status": exc.processing_status, "message": exc.message},
+            )
+        if isinstance(exc, (DemoAiLockedError, DemoQuotaExceededError)):
+            return JSONResponse(
+                status_code=exc.status_code,
+                content={"detail": exc.message, "code": exc.code},
             )
         return JSONResponse(status_code=exc.status_code, content={"detail": exc.message})
 

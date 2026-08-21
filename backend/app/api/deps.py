@@ -15,6 +15,7 @@ from app.ai.transcription.factory import build_transcription_provider
 from app.ai.transcription.provider import TranscriptionProvider
 from app.core.config import Settings, get_settings
 from app.core.db import get_db
+from app.core.demo_access import ensure_ai_access
 from app.core.exceptions import UnauthorizedError
 from app.core.security import decode_access_token
 from app.models.user import User
@@ -57,6 +58,41 @@ async def get_current_user(
 
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
+
+
+async def require_ai_access(
+    current_user: CurrentUser,
+    settings: AppSettings,
+) -> User:
+    ensure_ai_access(current_user, settings)
+    return current_user
+
+
+async def require_llm_quota(
+    current_user: CurrentUser,
+    settings: AppSettings,
+    session: DbSession,
+) -> User:
+    from app.core.demo_access import ensure_llm_quota
+
+    await ensure_llm_quota(session, current_user, settings)
+    return current_user
+
+
+async def require_transcription_quota(
+    current_user: CurrentUser,
+    settings: AppSettings,
+    session: DbSession,
+) -> User:
+    from app.core.demo_access import ensure_transcription_quota
+
+    await ensure_transcription_quota(session, current_user, settings)
+    return current_user
+
+
+AiUnlockedUser = Annotated[User, Depends(require_ai_access)]
+LlmQuotaUser = Annotated[User, Depends(require_llm_quota)]
+TranscriptionQuotaUser = Annotated[User, Depends(require_transcription_quota)]
 
 
 def get_llm_provider(settings: AppSettings) -> LLMProvider:

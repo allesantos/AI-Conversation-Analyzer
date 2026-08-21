@@ -4,12 +4,22 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 
+class DemoQuotaRead(BaseModel):
+    unlimited: bool
+    llm_used: int
+    llm_limit: int
+    audio_seconds_used: float
+    audio_seconds_limit: float
+
+
 class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
     email: EmailStr
     created_at: datetime
+    ai_access_enabled: bool = False
+    demo_quota: DemoQuotaRead | None = None
 
 
 class RegisterRequest(BaseModel):

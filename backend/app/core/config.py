@@ -22,6 +22,11 @@ class Settings(BaseSettings):
 
     cors_origins: str = "http://localhost:14200"
 
+    demo_owner_email: str = "alledesenvolvimento@gmail.com"
+    demo_contact_email: str = "alledesenvolvimento@gmail.com"
+    demo_unlocked_monthly_llm_calls: int = 20
+    demo_unlocked_monthly_transcription_seconds: int = 600
+
     openai_api_key: str = ""
     llm_provider: str = "openai"
     llm_model: str = "gpt-4o-mini"
