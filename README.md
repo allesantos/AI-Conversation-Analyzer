@@ -594,8 +594,6 @@ Desenvolvido por **Alexandre Santos**
 - [ ] Providers LLM/transcrição adicionais  
 - [ ] Planos FREE / PRO (sem cobrança no MVP)
 
-> **Fora de escopo:** integração direta com WhatsApp (Cloud API / Evolution). O produto trabalha com **export** do app (`.txt` / `.zip`), não com envio/recebimento em tempo real.
-
 ---
 
 **Se este projeto foi útil, deixe uma estrela no repositório.**
