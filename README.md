@@ -182,7 +182,6 @@ Consumo agregado (tokens, áudio, custo estimado) por dia/operação.
 - Rate limit em login/register
 - Hardening de produção (JWT obrigatório forte, OpenAPI fechado)
 - Providers alternativos (Anthropic, Groq, Whisper local)
-- WhatsApp Cloud / Evolution (interface mock apenas hoje)
 
 ---
 
@@ -593,8 +592,9 @@ Desenvolvido por **Alexandre Santos**
 ### Futuro
 
 - [ ] Providers LLM/transcrição adicionais  
-- [ ] Integração WhatsApp (Cloud / Evolution)  
 - [ ] Planos FREE / PRO (sem cobrança no MVP)
+
+> **Fora de escopo:** integração direta com WhatsApp (Cloud API / Evolution). O produto trabalha com **export** do app (`.txt` / `.zip`), não com envio/recebimento em tempo real.
 
 ---
 
