@@ -540,7 +540,7 @@ Uso do código sob termos a definir pelo autor (portfólio).
 
 Desenvolvido por **Alexandre Santos**
 
-- Email: alexandre.destefanni@gmail.com  
+- Email: alledesenvolvimento@gmail.com  
 - LinkedIn: [linkedin.com/in/alle-carlos-alexandre](https://www.linkedin.com/in/alle-carlos-alexandre)  
 - GitHub: [github.com/allesantos](https://github.com/allesantos)  
 - Repositório: [AI-Conversation-Analyzer](https://github.com/allesantos/AI-Conversation-Analyzer)
