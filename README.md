@@ -583,11 +583,10 @@ Desenvolvido por **Alexandre Santos**
 - [x] RAG, áudio/Whisper, ask, sugestões  
 - [x] Dashboard, usage, abas no detalhe  
 - [x] Testes automatizados backend  
+- [x] Screenshots do portfólio no README (`docs/screenshots/`)
 
 ### Próximo
 
-- [x] Screenshot landing (`docs/screenshots/1-landing.png`)
-- [x] Demais screenshots (register → usage)  
 - [ ] CI (GitHub Actions)  
 - [ ] Demo deployada  
 
