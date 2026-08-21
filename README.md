@@ -496,26 +496,6 @@ Credenciais `aca`/`aca` e `JWT_SECRET=change-me-…` são **apenas para localhos
 
 ---
 
-## Status do Projeto
-
-| Módulo | Status |
-|--------|--------|
-| Auth JWT + termos | Completo |
-| Import TXT / ZIP + áudio | Completo |
-| Métricas + Interest Engine | Completo |
-| RAG adaptativo + pgvector | Completo |
-| Whisper + transcrição manual | Completo |
-| Ask + sugestões (mensagem colada) | Completo |
-| Dashboard + usage | Completo |
-| UI abas Análise / Conversa / Explorar | Completo |
-| Testes backend (pytest) | Completo |
-| Demo pública / CI | Planejado |
-| Cobrança / planos | Fora do MVP |
-
-Fases 0–8 do MVP: **concluídas** (ver histórico em `docs/DECISIONS.md`).
-
----
-
 ## Contribuição
 
 1. Fork do projeto  
