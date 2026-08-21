@@ -33,6 +33,10 @@
   overflow: hidden;
 }
 
+.auth-mobile-brand {
+  display: none;
+}
+
 .auth-form-panel {
   display: flex;
   align-items: center;
@@ -125,45 +129,61 @@ form {
   :host,
   .auth-page {
     height: auto;
+    min-height: 100dvh;
     max-height: none;
     overflow: visible;
   }
 
   .auth-split {
     height: auto;
+    min-height: 100dvh;
     overflow: visible;
     grid-template-columns: 1fr;
   }
 
   .auth-visual-panel {
-    height: auto;
-    min-height: min(36vh, 280px);
+    display: none;
+  }
+
+  .auth-mobile-brand {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 20px;
+    line-height: 0;
+    text-decoration: none;
+
+    .brand-logo {
+      height: 28px;
+      width: auto;
+      max-width: 150px;
+      object-fit: contain;
+    }
   }
 
   .auth-form-panel {
     height: auto;
+    min-height: 100dvh;
     border-left: none;
     padding: 28px 24px 40px;
+    padding-top: calc(28px + env(safe-area-inset-top, 0px));
     padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
     overflow: visible;
+    align-items: flex-start;
+  }
+
+  .auth-subtitle {
+    display: none;
   }
 }
 
 @media (max-width: 480px) {
   .auth-form-panel {
     padding: 22px 16px 36px;
+    padding-top: calc(22px + env(safe-area-inset-top, 0px));
     padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px));
   }
 
-  .auth-form-panel button[mat-flat-button],
-  .auth-form-panel button[mat-raised-button] {
-    width: 100%;
+  .auth-submit {
     min-height: 44px;
-  }
-}
-
-@media (max-width: 480px) {
-  .auth-visual-panel {
-    min-height: 260px;
   }
 }

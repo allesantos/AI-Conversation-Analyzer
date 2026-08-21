@@ -825,24 +825,7 @@
   }
 
   .landing-visual--hero {
-    margin-bottom: clamp(8px, 2vw, 16px);
-  }
-
-  .hero-stage {
-    grid-template-columns: 1fr;
-    max-width: 300px;
-    gap: 14px;
-  }
-
-  .hero-phone {
-    grid-column: 1;
-    grid-row: auto;
-    max-height: clamp(360px, 62vw, 480px);
-  }
-
-  .hero-widgets {
-    grid-column: 1;
-    grid-row: auto;
+    display: none;
   }
 
   .mockup-slot--hero {
@@ -959,21 +942,5 @@
       text-align: center;
       box-sizing: border-box;
     }
-  }
-
-  .hero-stage {
-    grid-template-columns: 1fr;
-    max-width: 280px;
-  }
-
-  .hero-phone {
-    grid-column: 1;
-    grid-row: auto;
-    max-height: 380px;
-  }
-
-  .hero-widgets {
-    grid-column: 1;
-    grid-row: auto;
   }
 }
