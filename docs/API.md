@@ -30,6 +30,26 @@ Sem autenticação. Executa `SELECT 1` no banco. `{ "status": "ready" }`
 
 **201** — `{ "access_token": "<jwt>", "token_type": "bearer", "user": {...} }`
 
+Objeto `user` (register / login / me):
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | UUID | Identificador |
+| `email` | string | E-mail |
+| `created_at` | datetime | Criação |
+| `ai_access_enabled` | bool | `true` se pode usar LLM/Whisper |
+| `demo_quota` | object \| null | Cota mensal quando liberado; `null` se bloqueado |
+
+`demo_quota` (quando presente):
+
+| Campo | Descrição |
+|-------|-----------|
+| `unlimited` | `true` para o owner da demo |
+| `llm_used` / `llm_limit` | Chamadas LLM no mês (análise / ask / sugestões) |
+| `audio_seconds_used` / `audio_seconds_limit` | Segundos de Whisper no mês |
+
+**Demo (portfólio):** contas novas nascem com `ai_access_enabled=false`. O e-mail owner (`DEMO_OWNER_EMAIL`, padrão `alledesenvolvimento@gmail.com`) nasce liberado e sem cota. Contas liberadas via CLI têm cota mensal padrão: **20** LLM + **600s** Whisper.
+
 Erros: `409` e-mail duplicado · `422` termos não aceitos.
 
 ### `POST /api/v1/auth/login`
@@ -42,7 +62,7 @@ Erros: `409` e-mail duplicado · `422` termos não aceitos.
 
 ### `GET /api/v1/auth/me`
 
-Requer JWT. Retorna o usuário autenticado.
+Requer JWT. Retorna o usuário autenticado (incluindo `ai_access_enabled` e `demo_quota`).
 
 ---
 
@@ -120,7 +140,7 @@ O fingerprint de cache ignora UUIDs de mensagem/participante — reimportar o me
 
 Gera análise completa (métricas, resumo, sinais de interesse, reciprocidade, evidências).
 
-**200** — resultado completo. **202** — embeddings em processamento (polling necessário). **429** — rate limit.
+**200** — resultado completo. **202** — embeddings em processamento (polling necessário). **403** — IA bloqueada ou cota esgotada (ver abaixo). **429** — rate limit.
 
 **Cache de LLM:** se o conteúdo analisável não mudou desde a última análise com LLM, a resposta é servida do banco **sem nova chamada à API OpenAI**. Campos relevantes na resposta:
 
@@ -157,7 +177,7 @@ Análises gravadas antes da migração para fingerprint semântico podem exigir 
 { "question": "Quem inicia mais as conversas?" }
 ```
 
-**200** — resposta com observações e inferências. **202** — embeddings pendentes. **429** — rate limit.
+**200** — resposta com observações e inferências. **202** — embeddings pendentes. **403** — IA bloqueada ou cota. **429** — rate limit.
 
 ---
 
@@ -169,7 +189,7 @@ Body: `{ "incoming_message": "texto colado do WhatsApp" }` (1–4000 caracteres)
 
 Gera 4 sugestões (NATURAL, DIVERTIDA, DIRETA, CONSERVADORA) para responder à mensagem colada, usando o histórico importado só como contexto (métricas + RAG quando aplicável). `based_on_message_id` fica `null`.
 
-**200** — sugestões + `incoming_message` + provider/model. **400** — histórico vazio ou mensagem em branco. **429** — rate limit.
+**200** — sugestões + `incoming_message` + provider/model. **400** — histórico vazio ou mensagem em branco. **403** — IA bloqueada ou cota. **429** — rate limit.
 
 ---
 
@@ -179,7 +199,7 @@ Gera 4 sugestões (NATURAL, DIVERTIDA, DIRETA, CONSERVADORA) para responder à m
 
 Multipart: `file` (áudio) + `message_id` (UUID). Extensões aceitas: `.opus .ogg .mp3 .m4a .wav .aac .amr`.
 
-**202** — transcrição enfileirada. Polling via GET abaixo.
+**202** — transcrição enfileirada. Polling via GET abaixo. **403** — IA bloqueada ou cota de áudio esgotada.
 
 ### `GET /api/v1/conversations/{id}/audio/{transcription_id}`
 
@@ -216,6 +236,26 @@ Multipart: `file` (áudio) + `message_id` (UUID). Extensões aceitas: `.opus .og
 
 ---
 
-## Rate Limiting
+## Rate Limiting e acesso demo
+
+### Burst (anti-spam)
 
 Endpoints de IA (`/analyze`, `/ask`, `/suggestions`) têm rate limiting por usuário: 5 requisições em burst, reposição de ~12/min. Erro: **429** com mensagem descritiva.
+
+### Acesso e cota (demo / portfólio)
+
+| Código HTTP | `code` no JSON | Quando |
+|-------------|----------------|--------|
+| **403** | `DEMO_AI_LOCKED` | Conta sem `ai_access_enabled` (e não é owner) |
+| **403** | `DEMO_QUOTA_EXCEEDED` | Conta liberada, mas esgotou LLM (20/mês) ou áudio (600s/mês) |
+
+Corpo típico:
+
+```json
+{
+  "detail": "Esta é uma versão demo. ...",
+  "code": "DEMO_AI_LOCKED"
+}
+```
+
+Import `.txt`/`.zip` e visualização da conversa **não** exigem IA liberada. No `.zip`, se a conta estiver bloqueada ou sem cota de áudio, o chat importa e o Whisper **não** é enfileirado.

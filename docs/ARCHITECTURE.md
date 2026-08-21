@@ -1,8 +1,8 @@
 # Arquitetura — AI Conversation Analyzer
 
-> Documento da **Fase 0** — Análise e Proposta Arquitetural  
-> Data: 2026-08-19  
-> Status: **Fase 1 concluída — aguardando aprovação para Fase 2**
+> Documento vivo da arquitetura do produto  
+> Última revisão de status: **2026-08-21**  
+> Status: **MVP concluído (Fases 0–8)** — evolução pós-MVP em andamento (Import 2.0 / refinamentos)
 
 ---
 
@@ -27,13 +27,19 @@
 
 | Item | Status |
 |------|--------|
-| Código backend | ✅ FastAPI + auth + conversas |
-| Código frontend | ✅ Angular 20 + Material |
-| Docker/Infra | ✅ postgres + redis (ADR-015) |
+| Código backend | ✅ FastAPI + auth + conversas + IA + Interest Engine + RAG + áudio + usage |
+| Código frontend | ✅ Angular 20 + Material (landing, shell, dashboard, detalhe em abas) |
+| Docker/Infra (dev) | ✅ postgres + redis (ADR-015); API/worker/frontend nativos no Windows |
+| Parser WhatsApp | ✅ `.txt` + `.zip` (pareamento de áudios, reimport incremental) |
+| Interest & Reciprocity Engine | ✅ Sinais, score, confiança, evidências, timeline |
+| RAG adaptativo | ✅ Estratégia por tamanho + pgvector + jobs ARQ |
+| Áudio / Whisper | ✅ Upload, jobs, transcrição, reanálise |
+| Response Engine | ✅ Sugestões a partir da mensagem colada |
+| Demo access | ✅ Contas novas bloqueadas para IA; owner liberado; cota mensal pós-unlock |
 | Especificação | ✅ `.cursor/rules/project-spec.mdc` |
-| Documentação | ✅ Fase 0 + DEVELOPMENT + API |
+| Documentação | ✅ ARCHITECTURE, API, DEVELOPMENT, DECISIONS, THIRD_PARTY, README |
 
-**Conclusão:** Fase 1 (base) implementada. Parser, IA e Interest Engine ainda não existem.
+**Conclusão:** o critério de sucesso do MVP (conta → import → análise → evidências → ask → sugestões → áudio) está atendido. Próximos itens são evolução (CI, providers extras, Import 2.0 residual), não bloqueio de produto.
 
 ---
 
@@ -281,10 +287,11 @@ AI-Conversation-Analyzer/
 │   ├── ARCHITECTURE.md      ← este documento
 │   ├── THIRD_PARTY.md
 │   ├── DECISIONS.md
-│   ├── DEVELOPMENT.md       (Fase 1)
-│   └── API.md               (Fase 1)
+│   ├── DEVELOPMENT.md
+│   ├── API.md
+│   └── DEPLOY.md            (opcional / VPS)
 ├── infra/
-└── README.md                 (Fase 1)
+└── README.md
 ```
 
 ---
@@ -616,16 +623,16 @@ cd frontend && npm start
 |------|--------|-----------|-------------|
 | **0** | Análise + docs | ✅ Concluída | — |
 | **1** | Base: backend, frontend, Docker, auth, DB | ✅ Concluída | Fase 0 aprovada |
-| **2** | Importação: WhatsAppParser + storage + UI | 2-3 sem | Fase 1 |
-| **3** | IA básica: LLM, métricas, resumo, ask | 2-3 sem | Fase 2 |
-| **4** | RAG adaptativo: embeddings + pgvector | 2 sem | Fase 3 |
-| **5** | Interest Engine: sinais, score, evidências, timeline | 3-4 sem | Fase 3 |
-| **6** | Áudio: upload, Whisper, transcrição | 1-2 sem | Fase 2 |
-| **7** | Response Engine: sugestões contextualizadas | 1-2 sem | Fase 5 |
-| **8** | Refinamento: UX, usage, observabilidade, docs | 2-3 sem | Todas |
-| **9** | **Import 2.0:** zip com mídia, wizard export, incremental, timeline unificada (ADR-018 v0.5.0) | 3-5 sem | Fase 6, 8 |
+| **2** | Importação: WhatsAppParser + storage + UI | ✅ Concluída | Fase 1 |
+| **3** | IA básica: LLM, métricas, resumo, ask | ✅ Concluída | Fase 2 |
+| **4** | RAG adaptativo: embeddings + pgvector | ✅ Concluída | Fase 3 |
+| **5** | Interest Engine: sinais, score, evidências, timeline | ✅ Concluída | Fase 3 |
+| **6** | Áudio: upload, Whisper, transcrição | ✅ Concluída | Fase 2 |
+| **7** | Response Engine: sugestões contextualizadas | ✅ Concluída | Fase 5 |
+| **8** | Refinamento: UX, usage, observabilidade, docs | ✅ Concluída (MVP) | Todas |
+| **9** | **Import 2.0:** zip com mídia, wizard export, incremental, timeline unificada (ADR-018) | Parcial — `.zip` + incremental já no MVP; wizard/UX avançada pendente | Fase 6, 8 |
 
-**Estimativa total MVP:** 15-22 semanas (1 dev) — **Fases 0–8 concluídas.** Fase 9 é evolução pós-MVP.
+**Estimativa total MVP:** 15-22 semanas (1 dev) — **Fases 0–8 concluídas.** Fase 9 continua como evolução (parte do zip/incremental já entregue no MVP).
 
 ### Fase 9 — Import 2.0 (ADR-018 v0.5.0)
 
@@ -645,9 +652,9 @@ WhatsApp app  →  Exportar (.txt / .zip)
 
 ### Critério de sucesso do MVP
 
-O MVP estará completo quando for possível:
+O MVP está completo quando for possível (e **já é** no código atual):
 1. Criar conta e login
-2. Criar conversa e importar `.txt`
+2. Criar conversa e importar `.txt` / `.zip`
 3. Visualizar mensagens e participantes
 4. Executar análise com sinais positivos/neutros/negativos
 5. Ver nível de reciprocidade, confidence e evidências
@@ -717,13 +724,14 @@ O MVP estará completo quando for possível:
 
 ## 15. Próximos Passos
 
-A **Fase 1** está implementada. Após aprovação explícita, a **Fase 2** cobre:
+O **MVP funcional** está entregue. Prioridades de evolução (não bloqueiam o portfólio):
 
-- `WhatsAppParser` (TXT exportado)
-- Persistência de participantes e mensagens
-- Visualização da conversa no Angular
+1. CI (GitHub Actions) e hardening de produção
+2. Completar residual do Import 2.0 (wizard de export / UX avançada — ADR-018)
+3. Providers LLM/transcrição adicionais (Anthropic, Groq, Whisper local)
+4. Planos FREE / PRO (sem cobrança no MVP)
 
-Não avançar automaticamente.
+Demo pública e regras de acesso (`ai_access_enabled`, cotas) são camada operacional de portfólio — ver README e `docs/DEPLOY.md` se necessário; não alteram a arquitetura de domínio.
 
 ---
 
@@ -736,3 +744,4 @@ Não avançar automaticamente.
 | 2026-08-19 | 0.2.0 | Fase 1 implementada (base). |
 | 2026-08-19 | 0.2.1 | Portas de host não padrão (ADR-016). |
 | 2026-08-19 | 0.2.2 | Atalhos .bat na área de trabalho e scripts/dev-windows. |
+| 2026-08-21 | 0.9.0 | Status sincronizado com MVP concluído (Fases 0–8); Import 2.0 marcado como parcial. |

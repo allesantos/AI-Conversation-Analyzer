@@ -142,6 +142,7 @@ Consumo agregado (tokens, áudio, custo estimado) por dia/operação.
   - Import `.zip` com pareamento de áudios
   - Reimport incremental (evita duplicatas)
   - Seleção do participante OWNER
+  - Fluxo guest: arquivo pendente no browser → cadastro → import automático
 
 - **Análise com IA**
   - Métricas objetivas em Python (volume, iniciativa, tempos de resposta, etc.)
@@ -171,10 +172,12 @@ Consumo agregado (tokens, áudio, custo estimado) por dia/operação.
   - Rate limiting nos endpoints de IA
 
 - **Produto / UX**
+  - Landing de marketing + auth
   - Dashboard de conta (distribuição + recentes + usage)
   - Detalhe em abas: Análise | Conversa | Explorar
   - Tracking de uso de IA (`AIUsage`)
   - Design Flemm (Angular Material)
+  - Acesso demo: novas contas bloqueadas para IA; owner liberado; cota mensal pós-unlock
 
 ### Em evolução / próximos passos
 
@@ -545,7 +548,7 @@ Uso do código sob termos a definir pelo autor (portfólio).
 
 ## Contato
 
-Desenvolvido por **Alexandre Santos**
+Desenvolvido por **Carlos Alexandre Santos**
 
 - Email: alledesenvolvimento@gmail.com  
 - LinkedIn: [linkedin.com/in/alle-carlos-alexandre](https://www.linkedin.com/in/alle-carlos-alexandre)  
