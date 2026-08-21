@@ -178,10 +178,15 @@ Consumo agregado (tokens, áudio, custo estimado) por dia/operação.
 
 ### Em evolução / próximos passos
 
-- CI (GitHub Actions) e demo pública deployada
+- CI (GitHub Actions)
 - Rate limit em login/register
 - Hardening de produção (JWT obrigatório forte, OpenAPI fechado)
 - Providers alternativos (Anthropic, Groq, Whisper local)
+
+### Demo
+
+- **URL:** https://analyzer.allecursos.cloud  
+- Deploy VPS: ver [docs/DEPLOY.md](docs/DEPLOY.md)
 
 ---
 
@@ -560,7 +565,10 @@ Desenvolvido por **Alexandre Santos**
 ### Próximo
 
 - [ ] CI (GitHub Actions)  
-- [ ] Demo deployada  
+
+### Demo
+
+- [x] Demo deployada — https://analyzer.allecursos.cloud
 
 ### Futuro
 

@@ -1,6 +1,7 @@
 # Secrets
 .env
 !.env.example
+docker/.env
 
 # Python
 __pycache__/
