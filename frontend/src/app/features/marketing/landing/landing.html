@@ -1,6 +1,6 @@
 <div class="landing marketing-page marketing-page--light">
   <header class="landing-header">
-    <a routerLink="/" class="marketing-brand">
+    <a routerLink="/" class="marketing-brand" data-aa="fadeInDown">
       <img
         src="/assets/images/analyzer-logo.png"
         alt="Analyzer"
@@ -9,9 +9,9 @@
         height="401"
       />
     </a>
-    <nav class="marketing-nav-links landing-nav-auth">
+    <nav class="marketing-nav-links landing-nav-auth" data-aa="fadeInDown" data-aa-delay="120">
       @if (auth.isAuthenticated()) {
-        <a routerLink="/dashboard" class="btn-romance landing-nav-cta">Minhas conversas</a>
+        <a routerLink="/dashboard" class="btn-romance landing-nav-cta">Minhas análises</a>
       } @else {
         <a routerLink="/login" class="landing-nav-signin">Entrar</a>
         <a routerLink="/register" class="btn-romance landing-nav-cta">Criar conta</a>
@@ -22,18 +22,23 @@
   <section class="landing-hero">
     <div class="landing-hero-grid">
       <div class="landing-hero-main">
-        <p class="landing-kicker">WhatsApp · IA · Privacidade</p>
-        <h1 class="landing-title landing-display-title">
-          Leia entre as linhas das suas
-          <span class="script-accent">conversas</span>
+        <p class="landing-kicker" data-aa="fadeInDown" data-aa-delay="80">
+          Pretendente, sem achismo
+        </p>
+        <h1 class="landing-title landing-display-title" data-aa="fadeInUp" data-aa-delay="180">
+          Será que é
+          <span class="script-accent">recíproco?</span>
+          <span class="landing-title-line">O chat responde.</span>
         </h1>
-        <p class="landing-body landing-lead">
-          Evidências, reciprocidade e sinais de interesse — sempre separando
-          <strong>observação</strong> de <strong>inferência</strong>.
+        <p class="landing-body landing-lead" data-aa="fadeInUp" data-aa-delay="300">
+          Sinais, reciprocidade e trechos clicáveis. Você decide o próximo passo
+          com a cabeça no lugar.
         </p>
 
         <div
           class="drop-zone landing-drop"
+          data-aa="fadeInUp"
+          data-aa-delay="420"
           [class.is-dragover]="dragOver()"
           [class.has-file]="selectedFile()"
           (drop)="onDrop($event)"
@@ -52,13 +57,13 @@
               <strong>{{ file.name }}</strong>
               <span>Clique para trocar o arquivo</span>
             } @else {
-              <strong>Arraste e solte seu .txt ou .zip aqui</strong>
-              <span>ou clique para escolher o export do WhatsApp</span>
+              <strong>Solte aqui o export do WhatsApp</strong>
+              <span>.txt ou .zip — o começo mais simples</span>
             }
           </label>
         </div>
 
-        <label class="consent-row landing-consent">
+        <label class="consent-row landing-consent" data-aa="fadeInUp" data-aa-delay="520">
           <input
             type="checkbox"
             [checked]="consent()"
@@ -67,27 +72,109 @@
           <span>Tenho consentimento para analisar esta conversa (uso pessoal)</span>
         </label>
 
-        <div class="landing-cta-row">
+        @if (selectedFile() && !auth.isAuthenticated()) {
+          <p class="landing-pending-hint" data-aa="fadeInUp" data-aa-delay="560">
+            Arquivo guardado neste dispositivo. Crie uma conta para continuar — você não
+            precisará enviar de novo.
+          </p>
+        }
+        @if (pendingError(); as err) {
+          <p class="landing-pending-error">{{ err }}</p>
+        }
+
+        <div class="landing-cta-row" data-aa="fadeInUp" data-aa-delay="600">
           <button
             type="button"
             class="btn-romance landing-submit"
-            [disabled]="!consent()"
+            [disabled]="!consent() || savingFile()"
             (click)="startAnalysis()"
           >
-            Analisar minha conversa
+            @if (auth.isAuthenticated()) {
+              Quero ver o que o chat mostra
+            } @else {
+              Criar conta para analisar
+            }
           </button>
         </div>
       </div>
 
       <aside class="landing-visual landing-visual--hero" aria-label="Prévia do app">
-        <div class="mockup-slot mockup-slot--hero">
-          <app-photo
-            name="landing-mockup-hero"
-            alt="Mockup do Analyzer com celulares e cards de interesse, reciprocidade e evidências"
-            [contain]="true"
-            [priority]="true"
-            extraClass="landing-mockup landing-mockup--hero"
-          />
+        <div class="hero-stage">
+          <div class="hero-phone" data-aa="fadeInLeft" data-aa-delay="280">
+            <app-photo
+              name="landing-mockup-phone"
+              alt="Prévia do Analyzer no celular"
+              [contain]="true"
+              [priority]="true"
+              extraClass="landing-mockup landing-mockup--phone"
+            />
+          </div>
+
+          <div class="hero-widgets">
+            <article
+              class="hero-widget hero-widget--interest"
+              data-aa="fadeInRight"
+              data-aa-delay="380"
+            >
+              <div class="hero-widget-inner">
+                <div class="hero-widget-head">
+                  <span class="hero-widget-icon hero-widget-icon--gold aa-pop" aria-hidden="true">
+                    <span class="material-icons">favorite</span>
+                  </span>
+                  <div>
+                    <p class="hero-widget-label">Interesse</p>
+                    <p class="hero-widget-value">Moderado</p>
+                  </div>
+                </div>
+                <svg class="hero-spark" viewBox="0 0 120 28" aria-hidden="true">
+                  <path
+                    class="hero-spark-line"
+                    d="M2 22 C20 20 24 8 40 10 C56 12 60 24 76 16 C92 8 100 6 118 8"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <p class="hero-widget-meta">Confiança <strong>76%</strong></p>
+              </div>
+            </article>
+
+            <article
+              class="hero-widget hero-widget--reciprocity"
+              data-aa="fadeInRight"
+              data-aa-delay="500"
+            >
+              <div class="hero-widget-inner">
+                <div class="hero-widget-head">
+                  <span class="hero-widget-icon hero-widget-icon--purple aa-pop" aria-hidden="true">
+                    <span class="material-icons">compare_arrows</span>
+                  </span>
+                  <div>
+                    <p class="hero-widget-label">Reciprocidade</p>
+                    <p class="hero-widget-value">62<span>/100</span></p>
+                  </div>
+                </div>
+                <p class="hero-widget-meta">Iniciativa equilibrada</p>
+              </div>
+            </article>
+
+            <article
+              class="hero-widget hero-widget--evidence"
+              data-aa="fadeInRight"
+              data-aa-delay="620"
+            >
+              <div class="hero-widget-inner">
+                <span class="hero-widget-quote aa-pop" aria-hidden="true">
+                  <span class="material-icons">format_quote</span>
+                </span>
+                <p class="hero-widget-label">Evidência</p>
+                <p class="hero-widget-quote-text">
+                  “Ela iniciou 4 das últimas 10 conversas.”
+                </p>
+              </div>
+            </article>
+          </div>
         </div>
       </aside>
     </div>
@@ -95,86 +182,140 @@
 
   <section class="landing-insights">
     <div class="landing-story">
-      <div class="landing-story-copy">
-        <p class="landing-kicker">Análise do chat</p>
-        <h2 class="landing-section-title">Decifre sua <span class="script-accent">história</span></h2>
+      <div class="landing-story-copy" data-aa="fadeInLeft">
+        <p class="landing-kicker">Menos “será que…?”</p>
+        <h2 class="landing-section-title">Mais <span class="script-accent">evidência</span></h2>
         <p class="landing-body">
-          Veja mensagens, score de interesse e reciprocidade no mesmo lugar — com botões
-          de <strong>observação</strong> e <strong>inferência</strong> separados.
+          Quem puxa assunto, quem some, quem responde com carinho de verdade.
+          O Analyzer junta os fios — e aponta a mensagem que sustenta cada leitura.
         </p>
       </div>
-      <div class="landing-story-visual">
-        <div class="mockup-slot mockup-slot--chat">
+      <div class="landing-story-visual" data-aa="fadeInRight" data-aa-delay="160">
+        <div class="mockup-slot mockup-slot--evidence">
           <app-photo
-            name="landing-mockup-chat"
-            alt="Mockup de análise de chat com score de interesse e reciprocidade"
+            name="landing-mockup-evidence"
+            alt="Evidência detectada ligada a uma mensagem destacada na conversa"
             [contain]="true"
-            extraClass="landing-mockup landing-mockup--chat"
+            extraClass="landing-mockup landing-mockup--evidence"
           />
         </div>
       </div>
     </div>
 
     <div class="insight-grid">
-      <article>
-        <span class="insight-icon">◆</span>
-        <h3>Sinais de interesse</h3>
-        <p>Positivos, neutros e negativos com nível de confiança e evidências clicáveis.</p>
+      <article data-aa="fadeInUp" data-aa-delay="0">
+        <span class="insight-icon insight-icon--interest aa-pop" aria-hidden="true">
+          <span class="material-icons">favorite</span>
+        </span>
+        <h3>Sinais que você sente — e agora vê</h3>
+        <p>
+          Aproximação, frieza ou neutro, com confiança e o trecho do chat que
+          explica o porquê.
+        </p>
       </article>
-      <article>
-        <span class="insight-icon">◆</span>
-        <h3>Reciprocidade</h3>
-        <p>Quem inicia, tempo de resposta, proporção de mensagens e evolução no tempo.</p>
+      <article data-aa="fadeInUp" data-aa-delay="150">
+        <span class="insight-icon insight-icon--reciprocity aa-pop" aria-hidden="true">
+          <span class="material-icons">compare_arrows</span>
+        </span>
+        <h3>Reciprocidade sem drama</h3>
+        <p>
+          Iniciativa, tempo de resposta, equilíbrio — o mapa de quem está
+          investindo de verdade.
+        </p>
       </article>
-      <article>
-        <span class="insight-icon">◆</span>
-        <h3>Áudio transcrito</h3>
-        <p>Whisper integrado — áudios entram na análise como texto, no contexto certo.</p>
+      <article data-aa="fadeInUp" data-aa-delay="300">
+        <span class="insight-icon insight-icon--audio aa-pop" aria-hidden="true">
+          <span class="material-icons">mic</span>
+        </span>
+        <h3>O que foi dito (e não só digitado)</h3>
+        <p>
+          Áudios viram texto e entram na história. Vale para o WhatsApp e para
+          aquela gravação ou transcrição que você já tem.
+        </p>
       </article>
     </div>
   </section>
 
   <section class="landing-steps">
-    <h2 class="landing-section-title landing-section-title--center">Como funciona</h2>
+    <h2
+      class="landing-section-title landing-section-title--center"
+      data-aa="fadeInUp"
+    >
+      Três passos. Zero adivinhação.
+    </h2>
     <div class="steps-grid">
-      <article>
+      <article data-aa="fadeInLeft" data-aa-delay="0">
         <span class="step-num">1</span>
-        <h3>Exporte o chat</h3>
-        <p>Arquivo .txt do WhatsApp — ou .zip quando o app permitir incluir mídia.</p>
+        <h3>Traga o papo</h3>
+        <p>Export do WhatsApp (.txt ou .zip). É o atalho mais limpo para começar.</p>
       </article>
-      <article>
+      <article data-aa="fadeInUp" data-aa-delay="150">
         <span class="step-num">2</span>
-        <h3>Importe e transcreva</h3>
-        <p>Pareamos áudios com &lt;Mídia oculta&gt; e analisamos o conteúdo transcrito.</p>
+        <h3>Deixe o áudio falar</h3>
+        <p>Transcrevemos o que veio no chat — o conteúdo entra no mesmo fio da análise.</p>
       </article>
-      <article>
+      <article data-aa="fadeInRight" data-aa-delay="300">
         <span class="step-num">3</span>
-        <h3>Veja o panorama</h3>
-        <p>Nível de interesse, confiança, evidências clicáveis e evolução no tempo.</p>
+        <h3>Leia o interesse de verdade</h3>
+        <p>Score, sinais e trechos clicáveis. Você decide o próximo passo — com o peito mais leve.</p>
       </article>
     </div>
   </section>
 
   <section class="landing-trust">
     <div class="landing-trust-grid">
-      <div class="landing-trust-copy">
-        <h2 class="landing-section-title">Com grande poder vem grande confidencialidade</h2>
+      <div class="landing-trust-copy" data-aa="fadeInLeft">
+        <h2 class="landing-section-title">Intimidade merece cuidado</h2>
         <ul>
-          <li>Seus dados ficam na sua conta — delete quando quiser</li>
-          <li>Logs sem conteúdo privado das mensagens</li>
-          <li>Análise baseada em evidências, não em certezas absolutas</li>
+          <li>Sua conta, suas regras — apague tudo quando quiser</li>
+          <li>Logs sem o texto privado das mensagens</li>
+          <li>Nunca “ele/ela com certeza gosta de você” — só evidências e nuance</li>
         </ul>
       </div>
-      <div class="landing-trust-visual">
-        <div class="mockup-slot mockup-slot--card">
+      <div class="landing-trust-visual" data-aa="fadeInRight" data-aa-delay="180">
+        <div class="mockup-slot mockup-slot--privacy">
           <app-photo
-            name="landing-mockup-card"
-            alt="Card de análise de conversa com score de interesse"
+            name="landing-mockup-privacy"
+            alt="Controles de privacidade: excluir conversa, logs sem texto privado e evidências sem certezas absolutas"
             [contain]="true"
-            extraClass="landing-mockup landing-mockup--card"
+            extraClass="landing-mockup landing-mockup--privacy"
           />
         </div>
       </div>
     </div>
   </section>
+
+  <footer class="landing-footer" data-aa="fadeIn">
+    <div class="landing-footer-inner">
+      <div class="landing-footer-brand">
+        <a routerLink="/" class="marketing-brand">
+          <img
+            src="/assets/images/analyzer-logo.png"
+            alt="Analyzer"
+            class="brand-logo brand-logo--footer"
+            width="1827"
+            height="401"
+          />
+        </a>
+        <p>Pretendente, sem achismo — evidências no lugar do feeling.</p>
+      </div>
+
+      <nav class="landing-footer-nav" aria-label="Rodapé">
+        <a routerLink="/demo">Demo</a>
+        <a routerLink="/login">Entrar</a>
+        <a routerLink="/register">Criar conta</a>
+        <a href="mailto:alledesenvolvimento@gmail.com">Contato</a>
+      </nav>
+    </div>
+
+    <div class="landing-footer-bottom">
+      <p>
+        © {{ year }} Analyzer. Desenvolvido por <strong>Carlos Alexandre Santos</strong>.
+        Todos os direitos reservados.
+      </p>
+      <p class="landing-footer-note">
+        Uso pessoal — você é responsável pelas conversas que importa.
+      </p>
+    </div>
+  </footer>
 </div>

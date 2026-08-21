@@ -26,12 +26,17 @@
   font-size: 14px;
   background: #fff;
   transition:
-    background 0.15s,
-    border-color 0.15s;
+    background var(--app-motion-fast, 140ms) ease,
+    border-color var(--app-motion-fast, 140ms) ease,
+    transform var(--app-motion-fast, 140ms) var(--app-motion-ease, ease);
 
   &:hover {
     background: var(--flemm-lilac-card);
     border-color: var(--flemm-plum-light);
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 }
 
@@ -127,7 +132,8 @@
   border-radius: inherit;
   background: var(--gradient-romance);
   min-width: 0;
-  transition: width 0.25s ease;
+  transform-origin: left center;
+  transition: width var(--app-motion-slow, 320ms) var(--app-motion-ease, ease);
 }
 
 .recent-list {
@@ -148,14 +154,20 @@
   text-decoration: none;
   color: inherit;
   transition:
-    border-color 0.15s,
-    background 0.15s,
-    box-shadow 0.15s;
+    border-color var(--app-motion-fast, 140ms) ease,
+    background var(--app-motion-fast, 140ms) ease,
+    box-shadow var(--app-motion-fast, 140ms) ease,
+    transform var(--app-motion-fast, 140ms) var(--app-motion-ease, ease);
 
   &:hover {
     border-color: var(--border-medium);
     background: #fff;
     box-shadow: 0 8px 20px rgba(35, 28, 43, 0.06);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 

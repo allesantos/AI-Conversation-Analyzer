@@ -1,4 +1,4 @@
-<section class="usage-page">
+<section class="usage-page app-page">
   <h1 class="page-title">Uso de <span class="script-accent">IA</span></h1>
   <p class="page-lead">
     Consumo acumulado de tokens, áudio e custo estimado.
@@ -10,7 +10,7 @@
   }
 
   @if (summary(); as s) {
-    <div class="flemm-stat-grid">
+    <div class="flemm-stat-grid app-stagger">
       <div class="flemm-stat-card">
         <span class="flemm-stat-label">Chamadas</span>
         <span class="flemm-stat-value mono">{{ s.total_records }}</span>
@@ -53,39 +53,41 @@
       </div>
 
       @if (activeDay(); as day) {
-        <div class="usage-day-meta">
-          <span class="usage-day-meta-label">Subtotal do dia</span>
-          <span class="usage-day-meta-value mono">{{ formatCostPair(day.totalCost) }}</span>
-          <span class="usage-day-meta-count">{{ day.records.length }} chamada(s)</span>
-        </div>
+        <div class="usage-day-panel app-panel-enter">
+          <div class="usage-day-meta">
+            <span class="usage-day-meta-label">Subtotal do dia</span>
+            <span class="usage-day-meta-value mono">{{ formatCostPair(day.totalCost) }}</span>
+            <span class="usage-day-meta-count">{{ day.records.length }} chamada(s)</span>
+          </div>
 
-        <div class="flemm-table-wrap">
-          <table class="flemm-table">
-            <thead>
-              <tr>
-                <th>Hora</th>
-                <th>Operação</th>
-                <th>Provider</th>
-                <th>Modelo</th>
-                <th class="num">Tokens in</th>
-                <th class="num">Tokens out</th>
-                <th class="num">Custo</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (r of day.records; track trackRecord($index, r)) {
+          <div class="flemm-table-wrap">
+            <table class="flemm-table">
+              <thead>
                 <tr>
-                  <td class="mono">{{ r.created_at | date:'HH:mm' }}</td>
-                  <td>{{ operationLabel(r.operation) }}</td>
-                  <td>{{ r.provider }}</td>
-                  <td class="mono">{{ r.model }}</td>
-                  <td class="num mono">{{ r.input_tokens | number }}</td>
-                  <td class="num mono">{{ r.output_tokens | number }}</td>
-                  <td class="num mono cost-cell">{{ formatCostPair(r.estimated_cost) }}</td>
+                  <th>Hora</th>
+                  <th>Operação</th>
+                  <th>Provider</th>
+                  <th>Modelo</th>
+                  <th class="num">Tokens in</th>
+                  <th class="num">Tokens out</th>
+                  <th class="num">Custo</th>
                 </tr>
-              }
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                @for (r of day.records; track trackRecord($index, r)) {
+                  <tr>
+                    <td class="mono">{{ r.created_at | date:'HH:mm' }}</td>
+                    <td>{{ operationLabel(r.operation) }}</td>
+                    <td>{{ r.provider }}</td>
+                    <td class="mono">{{ r.model }}</td>
+                    <td class="num mono">{{ r.input_tokens | number }}</td>
+                    <td class="num mono">{{ r.output_tokens | number }}</td>
+                    <td class="num mono cost-cell">{{ formatCostPair(r.estimated_cost) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       }
     } @else {
@@ -96,5 +98,16 @@
         </p>
       </div>
     }
+  } @else if (!error()) {
+    <div class="app-skeleton-stack" aria-busy="true" aria-label="Carregando uso de IA">
+      <div class="app-skeleton-grid">
+        <div class="app-skeleton app-skeleton-card"></div>
+        <div class="app-skeleton app-skeleton-card"></div>
+        <div class="app-skeleton app-skeleton-card"></div>
+        <div class="app-skeleton app-skeleton-card"></div>
+        <div class="app-skeleton app-skeleton-card"></div>
+      </div>
+      <div class="app-skeleton app-skeleton-panel"></div>
+    </div>
   }
 </section>

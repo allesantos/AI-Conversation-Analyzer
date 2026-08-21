@@ -1,8 +1,15 @@
-<section class="conversations-page">
+<section class="conversations-page app-page">
   <h1 class="page-title">Suas <span class="script-accent">conversas</span></h1>
   @if (importWelcome()) {
     <div class="import-welcome">
-      Quase lá — crie uma conversa abaixo e importe seu arquivo .txt ou .zip.
+      @if (autoImporting()) {
+        Preparando sua conversa com o arquivo guardado…
+      } @else if (pendingFileName(); as pendingName) {
+        Arquivo pronto: <strong>{{ pendingName }}</strong>. Crie uma conversa abaixo — o
+        import começa automaticamente.
+      } @else {
+        Quase lá — crie uma conversa abaixo e importe seu arquivo .txt ou .zip.
+      }
     </div>
   }
   <p class="page-lead">Crie um registro e abra para importar o export do WhatsApp.</p>
@@ -21,9 +28,9 @@
     <p class="error">{{ error() }}</p>
   }
 
-  <div class="conv-list">
+  <div class="conv-list app-stagger">
     @for (item of items(); track item.id) {
-      <a [routerLink]="['/conversations', item.id]" class="conv-item">
+      <a [routerLink]="['/conversations', item.id]" class="conv-item app-lift">
         <div class="conv-info">
           <span class="conv-title">{{ item.title }}</span>
           <span class="conv-date">{{ item.created_at | date: 'dd/MM/yyyy' }}</span>

@@ -93,6 +93,10 @@
   &--shell {
     height: 28px;
   }
+
+  &--footer {
+    height: clamp(24px, 3.5vw, 30px);
+  }
 }
 
 .marketing-brand-mark {
@@ -124,6 +128,19 @@
     background: transparent;
     color: inherit;
     font-family: inherit;
+  }
+
+  // Não deixar o reset acima apagar o CTA com gradiente
+  a.btn-romance,
+  button.btn-romance {
+    background: var(--gradient-romance);
+    color: #fff;
+    box-shadow: var(--shadow-romance);
+
+    &:hover {
+      color: #fff;
+      background: var(--gradient-romance);
+    }
   }
 }
 
@@ -291,22 +308,28 @@
 
   input {
     margin-top: 3px;
-    accent-color: var(--flemm-plum);
+    accent-color: var(--analyzer-purple);
   }
 }
 
 .drop-zone {
-  border: 2px dashed rgba(91, 45, 94, 0.28);
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.92);
+  border: 2px dashed rgba(75, 22, 76, 0.22);
+  border-radius: 24px;
+  background: #fff;
   padding: clamp(32px, 5vw, 44px) 24px;
   margin-bottom: 20px;
-  transition: border-color 0.15s, background 0.15s;
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
 
   &.is-dragover,
   &.has-file {
-    border-color: var(--flemm-plum-light);
-    background: rgba(230, 210, 236, 0.35);
+    border-color: var(--analyzer-purple);
+    border-style: solid;
+    background: var(--analyzer-purple-soft);
+    box-shadow: var(--shadow-card-hover), 0 0 0 4px rgba(75, 22, 76, 0.08);
   }
 }
 
@@ -320,7 +343,7 @@
   strong {
     font-size: clamp(16px, 1.8vw, 18px);
     font-weight: 700;
-    color: var(--flemm-midnight);
+    color: var(--analyzer-purple);
   }
 
   span {

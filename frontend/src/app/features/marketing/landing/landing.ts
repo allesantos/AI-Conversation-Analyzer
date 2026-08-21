@@ -1,6 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { PendingImportService } from '../../../core/services/pending-import.service';
 import { PhotoComponent } from '../../../shared/photo/photo';
 
 @Component({
@@ -9,26 +10,77 @@ import { PhotoComponent } from '../../../shared/photo/photo';
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
-export class LandingComponent {
+export class LandingComponent implements AfterViewInit, OnDestroy {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly pendingImport = inject(PendingImportService);
 
+  readonly year = new Date().getFullYear();
   readonly selectedFile = signal<File | null>(null);
   readonly consent = signal(false);
   readonly dragOver = signal(false);
+  readonly pendingError = signal<string | null>(null);
+  readonly savingFile = signal(false);
+
+  private motionObserver: IntersectionObserver | null = null;
+
+  ngAfterViewInit(): void {
+    const nodes = Array.from(
+      this.host.nativeElement.querySelectorAll('[data-aa]'),
+    ) as HTMLElement[];
+
+    if (typeof IntersectionObserver === 'undefined') {
+      nodes.forEach((el) => this.playMotion(el));
+      return;
+    }
+
+    this.motionObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) {
+            continue;
+          }
+          this.playMotion(entry.target as HTMLElement);
+          this.motionObserver?.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.14, rootMargin: '0px 0px -8% 0px' },
+    );
+
+    for (const el of nodes) {
+      el.classList.add('aa-invisible');
+      this.motionObserver.observe(el);
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.9) {
+        this.playMotion(el);
+        this.motionObserver.unobserve(el);
+      }
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.motionObserver?.disconnect();
+    this.motionObserver = null;
+  }
+
+  private playMotion(el: HTMLElement): void {
+    const delay = Number(el.dataset['aaDelay'] ?? 0);
+    window.setTimeout(() => {
+      el.classList.remove('aa-invisible');
+      el.classList.add('aa-animated');
+    }, Number.isFinite(delay) ? delay : 0);
+  }
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.selectedFile.set(input.files?.[0] ?? null);
+    void this.rememberFile(input.files?.[0] ?? null);
   }
 
   onDrop(event: DragEvent): void {
     event.preventDefault();
     this.dragOver.set(false);
-    const file = event.dataTransfer?.files?.[0];
-    if (file) {
-      this.selectedFile.set(file);
-    }
+    void this.rememberFile(event.dataTransfer?.files?.[0] ?? null);
   }
 
   onDragOver(event: DragEvent): void {
@@ -40,19 +92,51 @@ export class LandingComponent {
     this.dragOver.set(false);
   }
 
-  startAnalysis(): void {
-    if (!this.consent()) {
+  async startAnalysis(): Promise<void> {
+    if (!this.consent() || this.savingFile()) {
       return;
     }
+    this.pendingError.set(null);
     const file = this.selectedFile();
+    if (file) {
+      this.savingFile.set(true);
+      try {
+        await this.pendingImport.save(file);
+      } catch (err: unknown) {
+        this.savingFile.set(false);
+        this.pendingError.set(
+          err instanceof Error ? err.message : 'Não foi possível guardar o arquivo.',
+        );
+        return;
+      }
+      this.savingFile.set(false);
+    }
+
     if (this.auth.isAuthenticated()) {
-      sessionStorage.setItem('aca.pendingImportName', file?.name ?? '');
-      this.router.navigate(['/conversations'], { queryParams: { import: '1' } });
+      void this.router.navigate(['/conversations'], {
+        queryParams: { import: '1', auto: '1' },
+      });
       return;
     }
-    if (file) {
-      sessionStorage.setItem('aca.pendingImportName', file.name);
+
+    void this.router.navigate(['/register'], { queryParams: { next: 'import' } });
+  }
+
+  private async rememberFile(file: File | null): Promise<void> {
+    this.selectedFile.set(file);
+    this.pendingError.set(null);
+    if (!file) {
+      return;
     }
-    this.router.navigate(['/register'], { queryParams: { next: 'import' } });
+    this.savingFile.set(true);
+    try {
+      await this.pendingImport.save(file);
+    } catch (err: unknown) {
+      this.pendingError.set(
+        err instanceof Error ? err.message : 'Não foi possível guardar o arquivo.',
+      );
+    } finally {
+      this.savingFile.set(false);
+    }
   }
 }

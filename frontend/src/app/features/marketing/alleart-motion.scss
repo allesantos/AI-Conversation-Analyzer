@@ -1,0 +1,113 @@
+// Motion style inspired by Alleart (Elementor entrance animations).
+// Source pattern: fadeIn / fadeInUp / fadeInDown / fadeInLeft / fadeInRight + scroll reveal.
+
+@keyframes aa-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes aa-fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 48px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes aa-fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -48px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes aa-fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-56px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes aa-fadeInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(56px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes aa-pop {
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+.aa-invisible {
+  opacity: 0;
+}
+
+.aa-animated {
+  animation-duration: 1.15s;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aa-animated[data-aa='fadeIn'] {
+  animation-name: aa-fadeIn;
+}
+
+.aa-animated[data-aa='fadeInUp'] {
+  animation-name: aa-fadeInUp;
+}
+
+.aa-animated[data-aa='fadeInDown'] {
+  animation-name: aa-fadeInDown;
+}
+
+.aa-animated[data-aa='fadeInLeft'] {
+  animation-name: aa-fadeInLeft;
+}
+
+.aa-animated[data-aa='fadeInRight'] {
+  animation-name: aa-fadeInRight;
+}
+
+.aa-pop:hover,
+.aa-pop:focus-visible {
+  animation: aa-pop 0.3s linear 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aa-invisible {
+    opacity: 1;
+  }
+
+  .aa-animated {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .aa-pop:hover,
+  .aa-pop:focus-visible {
+    animation: none !important;
+  }
+}

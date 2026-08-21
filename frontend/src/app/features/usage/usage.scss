@@ -57,14 +57,19 @@
   font-weight: 700;
   cursor: pointer;
   transition:
-    background 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease,
-    box-shadow 0.15s ease;
+    background var(--app-motion-fast, 140ms) ease,
+    border-color var(--app-motion-fast, 140ms) ease,
+    color var(--app-motion-fast, 140ms) ease,
+    box-shadow var(--app-motion-fast, 140ms) ease,
+    transform var(--app-motion-fast, 140ms) var(--app-motion-ease, ease);
 
   &:hover {
     border-color: rgba(91, 45, 94, 0.35);
     color: var(--flemm-plum);
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 
   &.is-active {

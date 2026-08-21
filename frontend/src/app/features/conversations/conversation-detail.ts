@@ -25,6 +25,7 @@ import {
   TimelinePeriod,
 } from '../../core/models/api.models';
 import { ConversationService } from '../../core/services/conversation.service';
+import { PendingImportService } from '../../core/services/pending-import.service';
 import {
   DEFAULT_EMBEDDING_PROCESSING_MESSAGE,
   DEFAULT_TRANSCRIPTION_PROCESSING_MESSAGE,
@@ -67,6 +68,7 @@ export type DetailTab = 'analise' | 'conversa' | 'explorar';
 })
 export class ConversationDetailComponent implements OnInit {
   private readonly conversationsApi = inject(ConversationService);
+  private readonly pendingImport = inject(PendingImportService);
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
@@ -193,6 +195,29 @@ export class ConversationDetailComponent implements OnInit {
     this.reload(true);
     this.loadExistingAnalysis();
     this.loadAnalysisOnlyMessages();
+    void this.consumePendingImportIfNeeded();
+  }
+
+  private async consumePendingImportIfNeeded(): Promise<void> {
+    if (this.route.snapshot.queryParamMap.get('pendingImport') !== '1') {
+      return;
+    }
+    const id = this.conversationId();
+    if (!id) {
+      return;
+    }
+    const file = await this.pendingImport.getFile();
+    if (!file) {
+      return;
+    }
+    this.notifySuccess(`Importando ${file.name}…`);
+    const ok = await this.importChatExport(id, file);
+    await this.pendingImport.clear();
+    if (ok) {
+      await this.reloadAsync(true);
+      this.loadExistingAnalysis();
+      this.notifySuccess('Arquivo importado. Defina quem é você na conversa para analisar.');
+    }
   }
 
   onUpdateFilesSelected(event: Event): void {

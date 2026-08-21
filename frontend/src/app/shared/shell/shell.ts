@@ -10,4 +10,5 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class ShellComponent {
   readonly auth = inject(AuthService);
+  readonly year = new Date().getFullYear();
 }

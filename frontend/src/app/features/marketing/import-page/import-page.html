@@ -13,12 +13,14 @@
           />
         </a>
         <div class="photo-copy">
-          <p class="photo-kicker">Importação segura</p>
+          <p class="photo-kicker">Menos “será que…?”</p>
           <h1 class="photo-title">
-            Decifre sua
-            <span class="photo-script">conversa</span>
+            Traga o
+            <span class="photo-script">papo</span>
           </h1>
-          <p class="photo-lead">.txt ou .zip do WhatsApp — áudios entram após o cadastro.</p>
+          <p class="photo-lead">
+            Export do WhatsApp para começar. Áudios entram na história depois do cadastro.
+          </p>
         </div>
       </div>
     </aside>
@@ -33,7 +35,8 @@
 
       <div class="marketing-panel-inner import-panel-inner">
         <p class="marketing-lead">
-          Envie o export. Se ainda não tem conta, criamos uma e você continua de onde parou.
+          Solte o export com quem você está conhecendo. Sem conta, a gente cria e você
+          segue de onde parou.
         </p>
 
         <div
@@ -71,13 +74,26 @@
           <span>Tenho consentimento para analisar esta conversa (uso pessoal)</span>
         </label>
 
+        @if (selectedFile() && !auth.isAuthenticated()) {
+          <p class="marketing-note">
+            Arquivo guardado neste dispositivo. Crie uma conta para continuar — sem reenviar.
+          </p>
+        }
+        @if (pendingError(); as err) {
+          <p class="marketing-note" style="color: #c26a6a">{{ err }}</p>
+        }
+
         <button
           type="button"
           class="btn-romance import-submit"
-          [disabled]="!consent()"
+          [disabled]="!consent() || savingFile()"
           (click)="startAnalysis()"
         >
-          Analisar minha conversa
+          @if (auth.isAuthenticated()) {
+            Quero ver o que o chat mostra
+          } @else {
+            Criar conta para analisar
+          }
         </button>
 
         <p class="marketing-note">

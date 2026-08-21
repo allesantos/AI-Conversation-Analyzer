@@ -49,7 +49,9 @@ export class RegisterComponent {
       next: () => {
         const next = this.route.snapshot.queryParamMap.get('next');
         if (next === 'import') {
-          void this.router.navigate(['/conversations'], { queryParams: { import: '1' } });
+          void this.router.navigate(['/conversations'], {
+            queryParams: { import: '1', auto: '1' },
+          });
           return;
         }
         void this.router.navigate(['/dashboard']);

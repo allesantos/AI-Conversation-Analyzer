@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @use './app/shared/flemm-ui.scss';
+@use './app/shared/app-motion.scss';
 
 // ---------------------------------------------------------------------------
 // Material 3 — light theme (Flemm paper aesthetic)
@@ -68,6 +69,17 @@ html {
   --flemm-stone: #b8a99a;
   --flemm-lilac-card: #e6d2ec;
 
+  /* Analyzer mobile identity (landing / marketing) */
+  --analyzer-purple: #4b164c;
+  --analyzer-purple-mid: #6b2d6e;
+  --analyzer-purple-soft: #f3e8f4;
+  --analyzer-magenta: #c45a8c;
+  --analyzer-gold: #e8a838;
+  --analyzer-positive: #3d9a6a;
+  --analyzer-negative: #e07a6a;
+  --shadow-card: 0 10px 32px rgba(75, 22, 76, 0.08);
+  --shadow-card-hover: 0 16px 40px rgba(75, 22, 76, 0.12);
+
   --romance-dark: var(--flemm-midnight-deep);
   --romance-cream: var(--flemm-paper);
   --romance-ink: var(--flemm-midnight);
@@ -109,9 +121,9 @@ html {
   --font-body: 'Manrope', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
 
-  --gradient-romance: linear-gradient(90deg, var(--flemm-plum) 0%, var(--flemm-brass) 100%);
-  --gradient-script: linear-gradient(120deg, var(--flemm-rose-light) 0%, var(--flemm-brass) 100%);
-  --shadow-romance: 0 12px 40px rgba(91, 45, 94, 0.22);
+  --gradient-romance: linear-gradient(90deg, var(--analyzer-purple) 0%, var(--analyzer-magenta) 100%);
+  --gradient-script: linear-gradient(120deg, var(--flemm-rose-light) 0%, var(--analyzer-gold) 100%);
+  --shadow-romance: 0 12px 36px rgba(75, 22, 76, 0.28);
   // Flemm: quase branco quente, wash bem suave (sem paper-soft escuro no topo)
   --page-background: linear-gradient(180deg, #fff 0%, var(--flemm-paper) 18%, var(--flemm-paper) 100%);
   --page-background-glow: radial-gradient(ellipse 85% 55% at 100% 0%, rgba(255, 251, 247, 0.95), transparent 58%),

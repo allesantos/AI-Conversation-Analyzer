@@ -1,4 +1,4 @@
-<section class="dashboard">
+<section class="dashboard app-page">
   <header class="dashboard-header">
     <div>
       <h1 class="page-title">Seu <span class="script-accent">dashboard</span></h1>
@@ -17,9 +17,17 @@
   }
 
   @if (loading()) {
-    <p class="page-lead">Carregando…</p>
+    <div class="app-skeleton-stack" aria-busy="true" aria-label="Carregando dashboard">
+      <div class="app-skeleton-grid">
+        <div class="app-skeleton app-skeleton-card"></div>
+        <div class="app-skeleton app-skeleton-card"></div>
+        <div class="app-skeleton app-skeleton-card"></div>
+        <div class="app-skeleton app-skeleton-card"></div>
+      </div>
+      <div class="app-skeleton app-skeleton-panel"></div>
+    </div>
   } @else if (summary(); as data) {
-    <div class="flemm-stat-grid">
+    <div class="flemm-stat-grid app-stagger">
       <div class="flemm-stat-card">
         <span class="flemm-stat-label">Conversas</span>
         <span class="flemm-stat-value">{{ data.total_conversations }}</span>
@@ -51,7 +59,7 @@
         </div>
       </div>
     } @else {
-      <div class="dashboard-grid">
+      <div class="dashboard-grid app-stagger">
         <section class="panel dash-panel">
           <h2 class="panel-title">Distribuição de interesse</h2>
           @if (hasAnalyzed()) {
@@ -78,10 +86,10 @@
             <h2 class="panel-title">Últimas conversas</h2>
             <a routerLink="/conversations" class="panel-link">Ver todas</a>
           </div>
-          <ul class="recent-list">
+          <ul class="recent-list app-stagger">
             @for (item of data.recent; track trackRecent($index, item)) {
               <li>
-                <a [routerLink]="['/conversations', item.id]" class="recent-card">
+                <a [routerLink]="['/conversations', item.id]" class="recent-card app-lift">
                   <div class="recent-top">
                     <strong>{{ item.title }}</strong>
                     <span class="mono recent-msgs">{{ item.total_messages }} msgs</span>

@@ -186,12 +186,17 @@
   align-items: center;
   gap: 8px;
   transition:
-    background 0.15s,
-    color 0.15s;
+    background var(--app-motion-fast, 140ms) ease,
+    color var(--app-motion-fast, 140ms) ease,
+    transform var(--app-motion-fast, 140ms) var(--app-motion-ease, ease);
 
   &:hover {
     background: var(--flemm-lilac-card);
     color: var(--flemm-plum);
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 
   &.is-active {
@@ -436,10 +441,13 @@
   text-decoration: none;
   font-size: 13px;
   margin-bottom: 12px;
-  transition: color 0.15s;
+  transition:
+    color var(--app-motion-fast, 140ms) ease,
+    transform var(--app-motion-fast, 140ms) var(--app-motion-ease, ease);
 
   &:hover {
     color: var(--accent-primary);
+    transform: translateX(-2px);
   }
 }
 

@@ -7,7 +7,9 @@ export type MarketingPhoto =
   | 'landing-mockup-hero'
   | 'landing-mockup-chat'
   | 'landing-mockup-phone'
-  | 'landing-mockup-card';
+  | 'landing-mockup-card'
+  | 'landing-mockup-evidence'
+  | 'landing-mockup-privacy';
 
 const PHOTO_FILES: Record<MarketingPhoto, string> = {
   'hero-chat': 'hero-chat.jpg',
@@ -17,6 +19,8 @@ const PHOTO_FILES: Record<MarketingPhoto, string> = {
   'landing-mockup-chat': 'landing-mockup-chat.png',
   'landing-mockup-phone': 'landing-mockup-phone.png',
   'landing-mockup-card': 'landing-mockup-card.png',
+  'landing-mockup-evidence': 'landing-mockup-evidence.png',
+  'landing-mockup-privacy': 'landing-mockup-privacy.png',
 };
 
 @Component({

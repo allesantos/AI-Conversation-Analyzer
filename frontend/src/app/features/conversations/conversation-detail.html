@@ -1,4 +1,4 @@
-<section class="detail-page">
+<section class="detail-page app-page">
   <input
     [id]="audioInputElementId()"
     type="file"
@@ -119,7 +119,7 @@
 
   <div class="detail-tab-panels">
     @if (activeTab() === 'analise') {
-      <div class="tab-panel tab-panel-analise">
+      <div class="tab-panel tab-panel-analise app-panel-enter">
         @if (summaryStale() && analysis() && !analyzing()) {
           <div class="info-banner">
             Resumo textual pode estar desatualizado — <strong>Reanalisar</strong> atualiza o texto
@@ -150,7 +150,7 @@
             <p class="hint">Ainda sem análise. Clique em <strong>Gerar análise</strong> na barra acima.</p>
           </div>
         } @else if (interestLevel()) {
-          <div class="hero-grid">
+          <div class="hero-grid app-stagger">
             <div class="panel hero-score">
               <span class="score-tag">Nível de interesse</span>
               <div class="score-main">
@@ -375,7 +375,7 @@
     }
 
     @if (activeTab() === 'conversa') {
-      <div class="tab-panel tab-panel-conversa">
+      <div class="tab-panel tab-panel-conversa app-panel-enter">
         @if (importPanelOpen()) {
           <div class="panel import-panel">
             <h2 class="panel-title">Atualizar dados</h2>
@@ -679,7 +679,7 @@
     }
 
     @if (activeTab() === 'explorar') {
-      <div class="tab-panel tab-panel-explorar">
+      <div class="tab-panel tab-panel-explorar app-panel-enter">
         <div class="explorar-grid">
           <div class="panel explorar-card">
             <h2 class="panel-title">Perguntar</h2>
